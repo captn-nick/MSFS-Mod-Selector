@@ -1,7 +1,13 @@
 # MSFS-Mod-Selector
+
+<img align="right" src="documentation/screenshot.png"/>
+
 The MSFS mod selector solves a common problem in **Microsoft Flight Simulator 2020 (MSFS)**: even though only a few weeks after release, there are hundreds of high-quality **community-created mods** to enhance MSFS experience even further, installing a large number of them considerably slows down MSFS startup time to an unbearable point.
+
 A simple manual solution is to manually copy only the mods you want to use at one time before starting the simulator.
+
 The Mod Selector assists you in this by **automating the selection process**: it allows you to easily group mods by type and (for world enhancements which would be most mods) by continent, country, and even by city.
+
 Here’s how this works:
 * You must register each mod once with the Mod Selector.
 * Then, start up the Mod Selector before starting MSFS.

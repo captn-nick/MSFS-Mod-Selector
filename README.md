@@ -66,21 +66,25 @@ Note:
 In order to add a mod under Mod Selector management, you must:
 * place the mod folder in the Community or Temp directory
 * add an entry to the mods.txt file
+
 A mods.txt file entry consists of a
-type	continent	country	name	city
+
+```type\tcontinent\tcountry\tname\tcity```
+
 entry whereas
-* type: abbreviation of one of the supported types. Supported types are:
+* ```type```: abbreviation of one of the supported types. Supported types are:
   * ```AP```: airport
   * ```LM```: individual landmarks
   * ```CT```: entire cities
   * ```LS```: individually modeled big landscape features, e.g. mountains (typically contain big texture files)
   * ```LF```: general landscape fixes, e.g. river elevation fixes (typically don’t contain any texture files)
   * ```LI```: airplane livreries
-* continent: abbreviation of one of the supported continents. Leave blank for livrery mods.
-* country: abbreviation of a country. Leave blank for livrery mods
-* name: The exact folder name of the mod in question.
-* city: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
-These 5 elements are separated by tabs.
+* ```continent```: abbreviation of one of the supported continents. Leave blank for livrery mods.
+* ```country```: abbreviation of a country. Leave blank for livrery mods
+* ```name```: The exact folder name of the mod in question.
+* ```city```: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
+
+These 5 elements are _separated by tabs_.
 
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.

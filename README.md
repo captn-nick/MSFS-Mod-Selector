@@ -129,4 +129,7 @@ Known limitations include:
 ## For Developers
 This project was built using the NetBeans IDE. JFrames and JPanels are created and edited with the IDE’s Swing editor.
 
+## Closing note
+This program will also be available for download through https://flightsim.to/.
+
 ## Happy Flying!

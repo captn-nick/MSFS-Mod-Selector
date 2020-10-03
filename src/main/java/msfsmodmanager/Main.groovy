@@ -4,73 +4,105 @@ import groovy.transform.CompileStatic
 import msfsmodmanager.logic.ModsChecker
 import msfsmodmanager.model.*
 import msfsmodmanager.state.*
+import msfsmodmanager.ui.ErrorFrame
 import msfsmodmanager.ui.MainFrame
 
 @CompileStatic
 class Main {
+    private static boolean showErrorsAsPopups = true
+    
     public static void main(String[] args) {
-        init()
-        MainFrame.main()
+        if ("--dontShowErrorPopups" in args) {
+            showErrorsAsPopups = false
+        }
+        
+        if (init()) {
+            MainFrame.main()
+        }
     }
     
-    public static void init() {
+    public static boolean init() {
         FileSystem.init()
         Mods.loadRegisteredMods()
         Continent.loadContinents()
         Cities.loadCities()
         
         List<File> allMods = Mods.findAllMods()
-        checkUnregisteredAndCorruptedMods(allMods)
-        checkDuplicatedMods(allMods)
-        checkUnregisteredMods(allMods)
-        checkUninstalledMods()
-        checkCorruptedMods()
+        boolean ret = (
+            checkUnregisteredAndCorruptedMods(allMods) &&
+            checkDuplicatedMods(allMods) &&
+            checkUnregisteredMods(allMods) &&
+            checkUninstalledMods() &&
+            checkCorruptedMods()
+        )
+        return ret
     }
     
-    private static void checkUnregisteredAndCorruptedMods(List<File> allMods) {
+    private static boolean checkUnregisteredAndCorruptedMods(List<File> allMods) {
         List<File> modFiles = ModsChecker.findUnregisteredAndCorruptedMods(allMods)
         if (!modFiles.empty) {
-            println "!!! Found mods which weren't registered and have a corrupted directory structure:"
-            println modFiles*.name.join("\n")
-            System.exit(1)
+            return error(
+                "!!! Found mods which weren't registered and have a corrupted directory structure:",
+                modFiles*.name.join("\n")
+            )
         }
+        return true
     }
     
-    private static void checkDuplicatedMods(List<File> allMods) {
+    private static boolean checkDuplicatedMods(List<File> allMods) {
         List<String> modNames = ModsChecker.findDuplicatedMods(allMods)
         if (!modNames.empty) {
-            println "!!! Found mods which are duplicated (one in Community, one in Temp folder):"
-            println modNames.join("\n")
-            System.exit(1)
+            return error(
+                "!!! Found mods which are duplicated (one in Community, one in Temp folder):",
+                modNames.join("\n")
+            )
         }
+        return true
     }
     
-    private static void checkUnregisteredMods(List<File> allMods) {
+    private static boolean checkUnregisteredMods(List<File> allMods) {
         List<String> modNames = ModsChecker.findUnregisteredMods(allMods)
         if (!modNames.empty) {
-            println "!!! Found unregistered mods:"
-            println modNames.join("\n")
-            System.exit(1)
+            return error(
+                "!!! Found unregistered mods:",
+                modNames.join("\n")
+            )
         }
+        return true
     }
     
-    private static void checkUninstalledMods() {
+    private static boolean checkUninstalledMods() {
         List<String> modNames = ModsChecker.findUninstalledMods()
         if (!modNames.empty) {
-            println "!!! Found mods which were registered but aren't present in mod directory:"
-            println modNames.join("\n")
-            System.exit(1)
+            return error (
+                "!!! Found mods which were registered but aren't present in mod directory:",
+                modNames.join("\n")
+            )
         }
+        return true
     }
     
-    private static void checkCorruptedMods() {
+    private static boolean checkCorruptedMods() {
         List<Mod> mods = ModsChecker.findCorruptedMods()
         if (!mods.empty) {
-            println "!!! Found mods with corrupted directory structure:"
-            println mods.collect {
-                it.name + (it.active ? "" : " (deactivated)")
-            }.join("\n")
-            System.exit(1)
+            return error (
+                "!!! Found mods with corrupted directory structure:",
+                mods.collect {
+                    it.name + (it.active ? "" : " (deactivated)")
+                }.join("\n")
+            )
+        }
+        return true
+    }
+    
+    private static boolean error(String message, String details) {
+        println message
+        println details
+        if (showErrorsAsPopups) {
+            ErrorFrame.show(message, details)
+        }
+        else {
+            System.exit(0)
         }
     }
 }

@@ -22,7 +22,8 @@ class I18N {
 
     public static String getString(String key) {
         try {
-            return bundle.getString(key)
+            // see https://stackoverflow.com/a/6995374 (Java 8 issue)
+            return new String(bundle.getString(key).getBytes("ISO-8859-1"), "UTF-8")
         }
         catch (MissingResourceException ex) {
             return "??? $key ???"

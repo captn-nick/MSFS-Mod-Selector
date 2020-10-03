@@ -3,6 +3,7 @@ package msfsmodmanager.ui;
 import java.util.Arrays;
 import java.util.List;
 import msfsmodmanager.model.Continent;
+import msfsmodmanager.model.ModType;
 
 public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel eu = new ContinentPanel(Continent.EU);
@@ -54,26 +55,28 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MSFS Mod Selector");
 
-        airportCheckBox.setSelected(true);
-        airportCheckBox.setText("Airports");
+        airportCheckBox.setSelected(ModType.defaultSelection.contains(ModType.AIRPORT));
+        airportCheckBox.setText(I18N.getString("ModType.AP"));
         typePanel.add(airportCheckBox);
 
-        landmarkCheckBox.setSelected(true);
-        landmarkCheckBox.setText("Landmarks");
+        landmarkCheckBox.setSelected(ModType.defaultSelection.contains(ModType.LANDMARK));
+        landmarkCheckBox.setText(I18N.getString("ModType.LM"));
         typePanel.add(landmarkCheckBox);
 
-        cityCheckBox.setText("Cities");
+        cityCheckBox.setSelected(ModType.defaultSelection.contains(ModType.CITY));
+        cityCheckBox.setText(I18N.getString("ModType.CT"));
         typePanel.add(cityCheckBox);
 
-        landscapeCheckBox.setText("Landscapes");
+        landscapeCheckBox.setSelected(ModType.defaultSelection.contains(ModType.LANDSCAPE));
+        landscapeCheckBox.setText(I18N.getString("ModType.LS"));
         typePanel.add(landscapeCheckBox);
 
-        landscapeFixCheckBox.setSelected(true);
-        landscapeFixCheckBox.setText("Landscape fixes");
+        landscapeFixCheckBox.setSelected(ModType.defaultSelection.contains(ModType.LANDSCAPE_FIX));
+        landscapeFixCheckBox.setText(I18N.getString("ModType.LF"));
         typePanel.add(landscapeFixCheckBox);
 
-        livreryCheckBox.setSelected(true);
-        livreryCheckBox.setText("Livreries");
+        livreryCheckBox.setSelected(ModType.defaultSelection.contains(ModType.LIVRERY));
+        livreryCheckBox.setText(I18N.getString("ModType.LI"));
         typePanel.add(livreryCheckBox);
 
         getContentPane().add(typePanel, java.awt.BorderLayout.NORTH);

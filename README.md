@@ -157,7 +157,7 @@ Known limitations include:
 ## Version history
 * 0.1: Initial release
 * 0.2:
-  * warning/error feedback trough UI;
+  * warning/error feedback through UI;
   * configuration for mod types, including default selection;
   * bugfix for UTF-8 support.
 

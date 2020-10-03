@@ -95,6 +95,14 @@ entry whereas
 * ```City```: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
 * ```\t```: a single tab character. The 5 elements are _separated by tabs_.
 
+Examples (note: this project is not affiliated with these mods in any way):
+* ```AP\tEU\tUK\tairport-eght-tresco-superspud``` for https://flightsim.to/file/598/eght-tresco-isles-of-scilly-uk, an airport in the UK, Europe.
+* ```LM\tOZ\tNZ\taucklandharbourbridge\tAuckland``` for https://flightsim.to/file/146/auckland-harbour-bridge, the Harbour Bridge landmark in Auckland, New Zealand, Oceania.
+* ```LS\tUS\t\tdevilstower-wyoming``` for https://flightsim.to/file/186/devil-s-tower, the Devil's Tower, a landscape feature in the US (here, as an example, I omitted the "country" part).
+* ```LI\t\t\tliveries-xcub``` for the X-Cub part of the Livreries mega pack, as featured on https://flightsim.to/.
+
+(Note to replace ```\t``` with a actual tab in these examples.)
+
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.
 * If there are startup errors / warnings, see below.

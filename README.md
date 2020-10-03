@@ -19,6 +19,14 @@ Here’s how this works:
 This program is very early beta. USE AT YOUR OWN RISK!
 It is highly recommended that you create a backup of your mods (MSFS Community folder) before using this program.
 
+## Project roadmap
+All of this is subject to change.
+* V. 0.3: Ability to add more meta-information to individual mods: description, ICAO code, author, website.
+* V. 0.4: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
+* V. 0.5: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.6: Intelligent wizard for adding mods to mods.txt.
+* V. 0.7: Local / online individual mod search by keywords.
+
 ## Prerequisites
 Mod Selector requires Java to run.
 
@@ -27,23 +35,23 @@ Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Se
 No installation is required. Simply unzip the content of the ZIP file into the MSFS “Package” folder.
 
 The program consists of 3 components:
-* **MsfsModSelector.java**: the program file.
+* **MsfsModSelector.jar**: the program file.
 * **mods.txt**: a text file containing information about all the mods managed by the Mod selector.
 * **config.properties**: a text file containing all configurations for the Mod selector.
 
 ## Setup
-By default, no setup is required.
+No setup is required.
 
 Start the Mod Selector by double-clicking the program file or via the command line, see below.
 
-If you placed the Mod Selector into your MSFS “Package” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. You need to create the “Temp” sub-folder if it doesn’t exist already.
+If you placed the Mod Selector into your MSFS “Package” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. **You need to create the “Temp” sub-folder if it doesn’t exist already before starting the program.**
 
 Alternatively, you can config those paths manually, see below.
 
 Afterwards, the Mod Selector will start.
 
 ## Config
-The config.properties files contains the Mod Selector configuration. A single config consists of a
+The **config.properties** files contains the Mod Selector configuration. A single config consists of a
 
 ```key=value```
 
@@ -52,6 +60,8 @@ entry.
 The following keys are of note:
 * ```path.community```: the full path of the Community mod directory
 * ```path.temp```: the full path of the temporary mod directory. Disabled mods will be stored here.
+* ```ModType.defaultSelection```: defines which mod types are selected by default.
+* ```ModType.XY```: defines the name of mod type XY as it is displayed in the UI.
 * ```Continent.XY.Countries```: defines which countries to show in the UI for individual selection and in which order for continent XY.
 * ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
 * ```Country.XY```: defines the name of country XY as it is displayed in the UI.
@@ -65,26 +75,25 @@ Note:
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
 * place the mod folder in the Community or Temp directory
-* add an entry to the mods.txt file
+* add an entry to the **mods.txt** file
 
 A mods.txt file entry consists of a
 
-```type\tcontinent\tcountry\tname\tcity```
+```Type\tContinent\tCountry\tName\tCity```
 
 entry whereas
-* ```type```: abbreviation of one of the supported types. Supported types are:
+* ```Type```: abbreviation of one of the supported types. Supported types are:
   * ```AP```: airport
   * ```LM```: individual landmarks
   * ```CT```: entire cities
   * ```LS```: individually modeled big landscape features, e.g. mountains (typically contain big texture files)
   * ```LF```: general landscape fixes, e.g. river elevation fixes (typically don’t contain any texture files)
   * ```LI```: airplane livreries
-* ```continent```: abbreviation of one of the supported continents. Leave blank for livrery mods.
-* ```country```: abbreviation of a country. Leave blank for livrery mods
-* ```name```: The exact folder name of the mod in question.
-* ```city```: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
-
-These 5 elements are _separated by tabs_.
+* ```Continent```: abbreviation of one of the supported continents. Leave blank for livrery mods.
+* ```Country```: abbreviation of a country. Leave blank for livrery mods
+* ```Name```: The exact folder name of the mod in question.
+* ```City```: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
+* ```\t```: a single tab character. The 5 elements are _separated by tabs_.
 
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.
@@ -108,8 +117,16 @@ In that way, selecting an entire continent / country (with cities) actually mean
 
 ## Warnings and errors
 At the start, the Mod Selector will check your mod registry and your directories for problems and show you an error message if it found any. You cannot start the Mod Selector without first resolving those issues.
-You have to start Mod Selector from the command line to see warning / error messages however. Use the following command:
+
+## Starting from the command line
+Instead of double-clicking on the program file, you can start the program from the command line / PowerShell with
+
 ```java –jar MsfsModSelector.jar```
+
+When started in command line mode, all errors will be printed to the console.
+
+Supported command line arguments:
+* ```--dontShowErrorPopups```: shows errors only on the command line, not as popups (in case you prefer it that way)
 
 ## Usage tips
 For installing new mods:
@@ -123,12 +140,25 @@ This program is very early beta. I have created it as a very quick & dirty solut
 Known limitations include:
 * No auto-discovery / assistance to add mods. All mods have to be added manually in the mods.txt file.
 * Mod Selector will not remember the last selection but always start up in the default selection.
-* Default selection for mod types cannot be changed.
 * Only limited possibilities to re-arrange geographical areas on the UI.
 * Doesn’t help identifying individual mods. Mods are simply kept in their (oftentimes chaotically named) directory structures.
-* Only very rudimental error handling and feedback.
+* Only limited error handling and feedback.
 * (Development: unclean build process.)
 * And probably a few more improvements which would be “nice to have”…
+
+## Version history
+* 0.1: Initial release
+* 0.2:
+  * warning/error feedback trough UI;
+  * configuration for mod types, including default selection;
+  * bugfix for UTF-8 support.
+
+## Upgrade guide
+* 0.1 -> 0.2:
+  * Make sure to add the ```ModType.defaultSelection``` and ```ModType.XY``` sections to your config.properties file.
+
+## Troubleshooting
+If there is a problem (e.g. the program doesn’t start up on double click), start it from the command line (see above) to make sure all errors are shown.
 
 ## For Developers
 This project was built using the NetBeans IDE. JFrames and JPanels are created and edited with the IDE’s Swing editor.

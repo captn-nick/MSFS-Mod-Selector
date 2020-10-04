@@ -21,19 +21,21 @@ It is highly recommended that you create a backup of your mods (MSFS Community f
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.3: Ability to add more meta-information to individual mods: description, ICAO code, author, website.
-* V. 0.4: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
-* V. 0.5: Make continent sub-panel sizes adjustable; show mod selection feedback.
-* V. 0.6: Intelligent wizard for adding mods to mods.txt.
-* V. 0.7: Local / online individual mod search by keywords.
+* V. 0.4: Support for additional mod types and aircraft-specific mod sub-categories.
+* V. 0.5: Improved error handling.
+* V. 0.6: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
+* V. 0.7: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.8: Intelligent wizard for adding mods to mods.txt.
+* V. 0.9: Local / online individual mod search by keywords.
 
 ## Prerequisites
 Mod Selector requires Java to run.
 
 ## Download
 Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.2/MsfsModSelector.0.2.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
-No installation is required. Simply unzip the content of the ZIP file into the MSFS “Package” folder.
 
+
+## Content
 The program consists of 3 components:
 * **MsfsModSelector.jar**: the program file.
 * **mods.txt**: a text file containing information about all the mods managed by the Mod selector.
@@ -42,13 +44,22 @@ The program consists of 3 components:
 ## Setup
 No setup is required.
 
-Start the Mod Selector by double-clicking the program file or via the command line, see below.
+1. **Simply unzip the content of the ZIP file into the MSFS “Packages” folder.**
+1. **Then, create a “Temp” sub-folder in the MSFS “Packages”.**
+1. **Finally, start the Mod Selector by double-clicking the program file or via the command line, see below.**
 
-If you placed the Mod Selector into your MSFS “Package” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. **You need to create the “Temp” sub-folder if it doesn’t exist already before starting the program.**
+Make sure that the directory structure is correct:
+* Packages/
+  * MsfsModSelector.jar
+  * config.properties
+  * mods.txt
+  * Community/
+  * Temp/
+  * (other folders of MSFS)
+
+If you placed the Mod Selector into your MSFS “Packages” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. **You need to create the “Temp” sub-folder if it doesn’t exist already before starting the program.**
 
 Alternatively, you can config those paths manually, see below.
-
-Afterwards, the Mod Selector will start.
 
 ## Config
 The **config.properties** files contains the Mod Selector configuration. A single config consists of a
@@ -65,6 +76,8 @@ The following keys are of note:
 * ```Continent.XY.Countries```: defines which countries to show in the UI for individual selection and in which order for continent XY.
 * ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
 * ```Country.XY```: defines the name of country XY as it is displayed in the UI.
+* ```Country.XY.showCities```: set to ```=false``` to not show any individual cities for this particular country in the UI. Defaults to ```=true```.
+* ```Cities.minMods```: defines the minimum number of mods which must be linked to a city in order to show it individually in the UI.
 
 Note:
 * For the paths, backslashes have to be doubled (```\\``` instead of ```\```).
@@ -79,9 +92,10 @@ In order to add a mod under Mod Selector management, you must:
 
 A mods.txt file entry consists of a
 
-```Type\tContinent\tCountry\tName\tCity```
+```Type\tContinent\tCountry\tName\tCityOrIcao ## Description\tAuthor\tWebsite```
 
 entry whereas
+* ```\t```: a single tab character. All elements are _separated by tabs_.
 * ```Type```: abbreviation of one of the supported types. Supported types are:
   * ```AP```: airport
   * ```LM```: individual landmarks
@@ -92,13 +106,18 @@ entry whereas
 * ```Continent```: abbreviation of one of the supported continents. Leave blank for livrery mods.
 * ```Country```: abbreviation of a country. Leave blank for livrery mods
 * ```Name```: The exact folder name of the mod in question.
-* ```City```: The actual name (no abbreviation!) of the city. Omit this and the preceding tab if not used.
-* ```\t```: a single tab character. The 5 elements are _separated by tabs_.
+* ```CityOrIcao```: one of the following:
+  * ```City```: The actual name (no abbreviation!) of the city. Not available for airports. Omit this and the preceding tab if not used. 
+  * ```Icao```: The ICAO code. Available for airports only. Omit this and the preceding tab if not used.
+* ```##``` (two hash signs, optionally surrounded by space): a separator. Separates off the following section of optional information. Omit if none of the following information is given.
+* ```Description```: a short description or “title” of the mod, e.g. the mod title as found on the download website.
+* ```Author```: the mod author’s name.
+* ```Website```: the website the mod can be downloaded from. Only https://flightsim.to sub-pages are supported.
 
 Examples (note: this project is not affiliated with these mods in any way):
 * ```AP\tEU\tUK\tairport-eght-tresco-superspud``` for https://flightsim.to/file/598/eght-tresco-isles-of-scilly-uk, an airport in the UK, Europe.
-* ```LM\tOZ\tNZ\taucklandharbourbridge\tAuckland``` for https://flightsim.to/file/146/auckland-harbour-bridge, the Harbour Bridge landmark in Auckland, New Zealand, Oceania.
-* ```LS\tUS\t\tdevilstower-wyoming``` for https://flightsim.to/file/186/devil-s-tower, the Devil's Tower, a landscape feature in the US (here, as an example, I omitted the "country" part).
+* ```LM\tOZ\tNZ\taucklandharbourbridge\tAuckland ## Auckland Harbour Bridge\tspas3manhttps://flightsim.to/file/146/auckland-harbour-bridge``` for https://flightsim.to/file/146/auckland-harbour-bridge, the Harbour Bridge landmark in Auckland, New Zealand, Oceania.
+* ```LS\tUS\t\tdevilstower-wyoming ## Devil's Tower\tVFXSimmer\thttps://flightsim.to/file/186/devil-s-tower``` for https://flightsim.to/file/186/devil-s-tower, the Devil's Tower, a landscape feature in the US (here, as an example, I omitted the "country" part).
 * ```LI\t\t\tliveries-xcub``` for the X-Cub part of the Livreries mega pack, as featured on https://flightsim.to/.
 
 (Note to replace ```\t``` with a actual tab in these examples.)
@@ -160,8 +179,14 @@ Known limitations include:
   * warning/error feedback through UI;
   * configuration for mod types, including default selection;
   * bugfix for UTF-8 support.
+* 0.3:
+  * ability to add more meta-information to individual mods: ICAO code, description, author, website;
+  * added new continent “other/fictional”.
 
 ## Upgrade guide
+* 0.2 -> 0.3:
+  * Make sure to add the ```Cities.minMods``` as well as the ```Continent.OF.Countries``` and ```Continent.OF=Other/Fictional``` entries to your config.properties file.
+  * (Optional) You may want to add the ```##``` trailing section to all your mods.txt entries.
 * 0.1 -> 0.2:
   * Make sure to add the ```ModType.defaultSelection``` and ```ModType.XY``` sections to your config.properties file.
 

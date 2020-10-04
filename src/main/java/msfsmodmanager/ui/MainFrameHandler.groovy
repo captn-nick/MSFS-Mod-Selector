@@ -17,7 +17,7 @@ class MainFrameHandler {
     public void apply() {
         Main.init()
         
-        Selection selection = SelectableComps.getSelection([frame.eu, frame.us, frame.na, frame.sa, frame.as, frame.af, frame.oz, frame.aa])
+        Selection selection = SelectableComps.getSelection([frame.eu, frame.us, frame.na, frame.sa, frame.as, frame.af, frame.oz, frame.aa, frame.of])
         
         if (frame.airportCheckBox.selected) selection.types << ModType.AIRPORT
         if (frame.landmarkCheckBox.selected) selection.types << ModType.LANDMARK

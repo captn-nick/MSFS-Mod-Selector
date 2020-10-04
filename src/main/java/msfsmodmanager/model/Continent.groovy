@@ -13,6 +13,7 @@ class Continent {
     public static Continent AS = new Continent("AS")
     public static Continent OZ = new Continent("OZ")
     public static Continent AA = new Continent("AA")
+    public static Continent OF = new Continent("OF")
     
     public static Map<String, Continent> BY_NAME = [
         EU: EU,
@@ -23,6 +24,7 @@ class Continent {
         AS: AS,
         OZ: OZ,
         AA: AA,
+        OF: OF,
     ]
     
     public final String name

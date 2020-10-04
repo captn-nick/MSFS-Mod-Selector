@@ -1,7 +1,5 @@
 package msfsmodmanager.ui;
 
-import java.util.Arrays;
-import java.util.List;
 import msfsmodmanager.model.Continent;
 import msfsmodmanager.model.ModType;
 
@@ -14,6 +12,7 @@ public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel af = new ContinentPanel(Continent.AF);
     public final ContinentPanel oz = new ContinentPanel(Continent.OZ);
     public final ContinentPanel aa = new ContinentPanel(Continent.AA);
+    public final ContinentPanel of = new ContinentPanel(Continent.OF);
     
     private final MainFrameHandler handler = new MainFrameHandler(this);
 
@@ -51,6 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
         continentsPanel4 = new javax.swing.JPanel();
         continentsPanel4.add(oz);
         continentsPanel4.add(aa);
+        continentsPanel4.add(of);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MSFS Mod Selector");

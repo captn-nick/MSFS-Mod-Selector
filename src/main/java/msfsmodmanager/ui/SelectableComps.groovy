@@ -12,7 +12,7 @@ class SelectableComps {
     
     private static List<SelectableCheckBox> createForCountries(Continent continent) {
         return continent.countries.collect {
-            if (Cities.BY_COUNTRY[it].empty) {
+            if (Cities.byCountry(it).empty) {
                 return new SelectableCheckBox(it, true)
             }
             else {
@@ -22,13 +22,13 @@ class SelectableComps {
     }
     
     public static List<SelectableCheckBox> createForCities(Continent continent) {
-        return Cities.BY_CONTINENT[continent].collect { String it ->
+        return Cities.byContinent(continent).collect { String it ->
             new SelectableCheckBox(it, false)
         }
     }
     
     public static List<SelectableCheckBox> createForCities(String country) {
-        return Cities.BY_COUNTRY[country].collect {
+        return (Cities.byCountry(country)).collect {
             new SelectableCheckBox(it, false)
         }
     }

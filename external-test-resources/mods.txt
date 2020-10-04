@@ -1,0 +1,9 @@
+AP	EU	UK	mySimpleAirport
+AP	EU	UK	myAirport	ABC1 ## An example Airport!	myself	https://flightsim.to/myAirport
+AP	EU	RO	myRomanianAirport ## An airport in Romania	myself	https://flightsim.to/myRomanianAirport
+LM	EU	UK	landmark-london1	London ## An example Landmark in London!	someone else	https://flightsim.to/landmark-london1
+LM	EU	UK	landmark-london2	London ## A 2nd example Landmark in London!	someone else	https://flightsim.to/landmark-london2
+LM	EU	UK	landmark-birmingham	Birmingham ## A landmark in Birmingham, UK		
+LM	EU	NL	landmark-amsterdam	Amsterdam ## A landmark in Amsterdam!	someone else	https://flightsim.to/landmark-amsterdam
+CT	EU		city-tallinn	Tallinn ## A city in Europe	someone else	https://flightsim.to/city-tallinn
+AP	AA	GL	airport-bgco-nerlerit	BGCO ## Nerlerit Inaat Airport - Greenland	Ry4nFlint	https://flightsim.to/file/79/nerlerit-inaat-airport-greenland

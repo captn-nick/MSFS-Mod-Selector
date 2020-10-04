@@ -24,7 +24,7 @@ class Selection {
         if (mod.city in cities) {
             return true
         }
-        else if (mod.city == null) {
+        else if (mod.city == null || mod.city in Cities.DISABLED_CITIES) {
             if (mod.country in countries) {
                 return true
             }

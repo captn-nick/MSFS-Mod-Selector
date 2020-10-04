@@ -67,7 +67,6 @@
                 <executions>
                     <execution>
                         <id>copy-resources</id>
-                        <!-- here the phase you need -->
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -77,6 +76,10 @@
                             <resources>          
                                 <resource>
                                     <directory>external-resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                                <resource>
+                                    <directory>external-test-resources</directory>
                                     <filtering>true</filtering>
                                 </resource>
                             </resources>              
@@ -92,7 +95,6 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <tasks>
-                                <mkdir dir="target/Community"/>
                                 <mkdir dir="target/Temp"/>
                             </tasks>
                         </configuration>

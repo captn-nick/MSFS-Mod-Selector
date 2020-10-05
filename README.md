@@ -19,6 +19,8 @@ Here’s how this works:
 This program is very early beta. USE AT YOUR OWN RISK!
 It is highly recommended that you create a backup of your mods (MSFS Community folder) before using this program.
 
+**Until V. 1.0 is reached, please expect breaking changes with each version jump!**
+
 ## Project roadmap
 All of this is subject to change.
 * V. 0.4: Support for additional mod types and aircraft-specific mod sub-categories.
@@ -46,6 +48,7 @@ No setup is required.
 
 1. **Simply unzip the content of the ZIP file into the MSFS “Packages” folder.**
 1. **Then, create a “Temp” sub-folder in the MSFS “Packages”.**
+1.	**You will need to add all mods which you want to manage manually to mods.txt first, see below.**
 1. **Finally, start the Mod Selector by double-clicking the program file or via the command line, see below.**
 
 Make sure that the directory structure is correct:
@@ -187,6 +190,7 @@ Known limitations include:
 * 0.2 -> 0.3:
   * Make sure to add the ```Cities.minMods``` as well as the ```Continent.OF.Countries``` and ```Continent.OF=Other/Fictional``` entries to your config.properties file.
   * (Optional) You may want to add the ```##``` trailing section to all your mods.txt entries.
+  * (Optional) You may want to add ICAO information (instead of city information) to your airport entries in mods.txt. For airports, city information will be ignored.
 * 0.1 -> 0.2:
   * Make sure to add the ```ModType.defaultSelection``` and ```ModType.XY``` sections to your config.properties file.
 

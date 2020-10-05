@@ -6,7 +6,7 @@ The MSFS mod selector solves a common problem in **Microsoft Flight Simulator 20
 
 A simple manual solution is to manually copy only the mods you want to use at one time before starting the simulator.
 
-The Mod Selector assists you in this by **automating the selection process**: it allows you to easily group mods by type and (for world enhancements which would be most mods) by continent, country, and even by city.
+The Mod Selector assists you in this by **automating the selection process**: it allows you to easily group mods by type and (for world enhancements which would be most mods) by continent, country, and even by city as well as by aircraft type (for aircraft mods).
 
 Here’s how this works:
 * You must register each mod once with the Mod Selector.
@@ -23,12 +23,12 @@ It is highly recommended that you create a backup of your mods (MSFS Community f
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.4: Support for additional mod types and aircraft-specific mod sub-categories.
 * V. 0.5: Improved error handling.
-* V. 0.6: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
-* V. 0.7: Make continent sub-panel sizes adjustable; show mod selection feedback.
-* V. 0.8: Intelligent wizard for adding mods to mods.txt.
-* V. 0.9: Local / online individual mod search by keywords.
+* V. 0.6: Config file cleanup
+* V. 0.7: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
+* V. 0.8: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.9: Intelligent wizard for adding mods to mods.txt.
+* V. 0.10: Local / online individual mod search by keywords.
 
 ## Prerequisites
 Mod Selector requires Java to run.
@@ -76,6 +76,8 @@ The following keys are of note:
 * ```path.temp```: the full path of the temporary mod directory. Disabled mods will be stored here.
 * ```ModType.defaultSelection```: defines which mod types are selected by default.
 * ```ModType.XY```: defines the name of mod type XY as it is displayed in the UI.
+* ```AircraftType```: defines the title of the “aircraft” section as it is displayed in the UI.
+* ```AircraftType.XY```: defines the name of aircraft type XY as it is displayed in the UI.
 * ```Continent.XY.Countries```: defines which countries to show in the UI for individual selection and in which order for continent XY.
 * ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
 * ```Country.XY```: defines the name of country XY as it is displayed in the UI.
@@ -95,7 +97,7 @@ In order to add a mod under Mod Selector management, you must:
 
 A mods.txt file entry consists of a
 
-```Type\tContinent\tCountry\tName\tCityOrIcao ## Description\tAuthor\tWebsite```
+```Type\tContinent\tCountry\tName\tCityOrIcaoOrAircrafttype ## Description\tAuthor\tWebsite```
 
 entry whereas
 * ```\t```: a single tab character. All elements are _separated by tabs_.
@@ -105,13 +107,16 @@ entry whereas
   * ```CT```: entire cities
   * ```LS```: individually modeled big landscape features, e.g. mountains (typically contain big texture files)
   * ```LF```: general landscape fixes, e.g. river elevation fixes (typically don’t contain any texture files)
-  * ```LI```: airplane livreries
+  * ```AL```: aircraft livreries
+  * ```AM```: aircraft models
+  * ```OT```: other
 * ```Continent```: abbreviation of one of the supported continents. Leave blank for livrery mods.
 * ```Country```: abbreviation of a country. Leave blank for livrery mods
 * ```Name```: The exact folder name of the mod in question.
-* ```CityOrIcao```: one of the following:
-  * ```City```: The actual name (no abbreviation!) of the city. Not available for airports. Omit this and the preceding tab if not used. 
-  * ```Icao```: The ICAO code. Available for airports only. Omit this and the preceding tab if not used.
+* ```CityOrIcaoOrAircrafttype```: one of the following:
+  * ```City```: the actual name (no abbreviation!) of the city. Available for landmarks, cities, landscapes, and landscape fixes only. Omit this and the preceding tab if not used. 
+  * ```Icao```: the ICAO code. Available for airports only. Omit this and the preceding tab if not used.
+  * ```Aircrafttype```: abbreviation of one of the supported aircraft types. Available for livreries and aircraft models only. Omit this and the preceding tab if not used.
 * ```##``` (two hash signs, optionally surrounded by space): a separator. Separates off the following section of optional information. Omit if none of the following information is given.
 * ```Description```: a short description or “title” of the mod, e.g. the mod title as found on the download website.
 * ```Author```: the mod author’s name.
@@ -124,6 +129,8 @@ Examples (note: this project is not affiliated with these mods in any way):
 * ```LI\t\t\tliveries-xcub``` for the X-Cub part of the Livreries mega pack, as featured on https://flightsim.to/.
 
 (Note to replace ```\t``` with a actual tab in these examples.)
+
+[You can find an example of **a complete mods.txt file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/mods.txt).
 
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.
@@ -185,8 +192,17 @@ Known limitations include:
 * 0.3:
   * ability to add more meta-information to individual mods: ICAO code, description, author, website;
   * added new continent “other/fictional”.
+* 0.4:
+  * added “aircraft” and “other” mod types;
+  * added aircraft-specific mod sub-categories;
+  * support for 3-character ICAO codes;
+  * startup bugfix for empty mods.txt file.
 
 ## Upgrade guide
+* 0.3 -> 0.4:
+  * Make sure to add the ```ModType.AL``` / ```ModType.AM``` / ```ModType.OT``` sections as well as the ```AircraftType``` entry and the ```AircraftType.XY``` sections to your config.properties file.
+  * For livrery mods, please change the mod type id ```LI``` to the new id ```AL``` for your mods.txt entries.
+    * For the moment, ```LI``` is still supported for backwards compatibility.
 * 0.2 -> 0.3:
   * Make sure to add the ```Cities.minMods``` as well as the ```Continent.OF.Countries``` and ```Continent.OF=Other/Fictional``` entries to your config.properties file.
   * (Optional) You may want to add the ```##``` trailing section to all your mods.txt entries.

@@ -6,11 +6,13 @@ import groovy.transform.ToString
 @CompileStatic
 @ToString
 class Selection {
+    List<ModType> types = []
+    
     List<Continent> continents
     List<String> countries = []
     List<String> cities = []
     
-    List<ModType> types = []
+    List<AircraftType> aircraftTypes = []
     
     public Selection(List<String> continentNames) {
         continents = continentNames.collect { Continent.BY_NAME[it] }
@@ -19,6 +21,15 @@ class Selection {
     public boolean activates(Mod mod) {
         if (!(mod.type in types)) {
             return false
+        }
+        
+        if (mod.type in [ModType.LIVRERY, ModType.AIRCRAFT_MODEL]) {
+            if (!mod.aircraftType || mod.aircraftType in aircraftTypes) {
+                return true
+            }
+            else {
+                return false
+            }
         }
         
         if (mod.city in cities) {

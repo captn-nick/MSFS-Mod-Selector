@@ -13,7 +13,9 @@ enum ModType {
     CITY("CT"),
     LANDSCAPE("LS"),
     LANDSCAPE_FIX("LF"),
-    LIVRERY("LI"),
+    LIVRERY("AL"),
+    AIRCRAFT_MODEL("AM"),
+    OTHER("OT"),
     
     public static List<ModType> defaultSelection
     
@@ -27,6 +29,10 @@ enum ModType {
     String abbr
     
     public static ModType parse(String abbr) {
+        // for backwards compatibility with v. 0.3 only
+        if (abbr == "LI") {
+            return LIVRERY
+        }
         return values().find { it.abbr == abbr }
     }
 }

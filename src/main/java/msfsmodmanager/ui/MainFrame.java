@@ -14,6 +14,8 @@ public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel aa = new ContinentPanel(Continent.AA);
     public final ContinentPanel of = new ContinentPanel(Continent.OF);
     
+    public final AircraftPanel aircraftPanel = new AircraftPanel();
+    
     private final MainFrameHandler handler = new MainFrameHandler(this);
 
     /**
@@ -51,6 +53,7 @@ public class MainFrame extends javax.swing.JFrame {
         continentsPanel4.add(oz);
         continentsPanel4.add(aa);
         continentsPanel4.add(of);
+        continentsPanel4.add(aircraftPanel);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("MSFS Mod Selector");
@@ -76,8 +79,16 @@ public class MainFrame extends javax.swing.JFrame {
         typePanel.add(landscapeFixCheckBox);
 
         livreryCheckBox.setSelected(ModType.defaultSelection.contains(ModType.LIVRERY));
-        livreryCheckBox.setText(I18N.getString("ModType.LI"));
+        livreryCheckBox.setText(I18N.getString("ModType.AL"));
         typePanel.add(livreryCheckBox);
+
+        aircraftModelCheckBox.setSelected(ModType.defaultSelection.contains(ModType.AIRCRAFT_MODEL));
+        aircraftModelCheckBox.setText(I18N.getString("ModType.AM"));
+        typePanel.add(aircraftModelCheckBox);
+
+        otherCheckBox.setSelected(ModType.defaultSelection.contains(ModType.OTHER));
+        otherCheckBox.setText(I18N.getString("ModType.OT"));
+        typePanel.add(otherCheckBox);
 
         getContentPane().add(typePanel, java.awt.BorderLayout.NORTH);
 
@@ -166,6 +177,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public final javax.swing.JCheckBox aircraftModelCheckBox = new javax.swing.JCheckBox();
     public final javax.swing.JCheckBox airportCheckBox = new javax.swing.JCheckBox();
     private javax.swing.JButton applyButton;
     private javax.swing.JPanel buttonPanel;
@@ -181,6 +193,7 @@ public class MainFrame extends javax.swing.JFrame {
     public final javax.swing.JCheckBox livreryCheckBox = new javax.swing.JCheckBox();
     private javax.swing.JPanel mainPanel;
     private javax.swing.JScrollPane mainScrollPane;
+    public final javax.swing.JCheckBox otherCheckBox = new javax.swing.JCheckBox();
     private javax.swing.JPanel typePanel;
     // End of variables declaration//GEN-END:variables
 }

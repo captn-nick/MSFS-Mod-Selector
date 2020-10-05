@@ -15,6 +15,7 @@ class Mod {
     String country
     String city
     String icao
+    AircraftType aircraftType
     
     String description
     String author
@@ -53,14 +54,17 @@ class Mod {
         
         public Builder country(String country) { this.mod.country = country; return this }
         
-        public Builder cityOrIcao(String cityOrIcao) {
+        public Builder cityOrIcaoOrAircraft(String cityOrIcaoOrAircraft) {
             if (this.mod.type == ModType.AIRPORT) {
-                if (isIcao(cityOrIcao)) {
-                    this.mod.icao = cityOrIcao
+                if (isIcao(cityOrIcaoOrAircraft)) {
+                    this.mod.icao = cityOrIcaoOrAircraft
                 }
             }
+            else if (this.mod.type in [ModType.LIVRERY, ModType.AIRCRAFT_MODEL]) {
+                this.mod.aircraftType = AircraftType.parse(cityOrIcaoOrAircraft)
+            }
             else {
-                this.mod.city = cityOrIcao
+                this.mod.city = cityOrIcaoOrAircraft
             }
             return this
         }
@@ -75,7 +79,7 @@ class Mod {
     }
     
     private static boolean isIcao(String candidate) {
-        return candidate ==~ /[A-Z0-9]{4}/
+        return candidate ==~ /[A-Z0-9]{3,4}/
     }
 }
 

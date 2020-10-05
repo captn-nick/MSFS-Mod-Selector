@@ -18,7 +18,7 @@ class Mods {
          * Also for very unknown reasons, we cannot reliably match its presense / non-presense with regex.
          * Thus, match against all known ModTypes since a ModType's first character should be the first character in mods.txt.
          */
-        if (!ModType.any { ModType it -> text.startsWith(it.name()[0]) }) {
+        if (!text.empty && !ModType.any { ModType it -> text.startsWith(it.name()[0]) }) {
             text = text.substring(1)
         }
         
@@ -35,7 +35,7 @@ class Mods {
                 .type(basic[0])
                 .continent(basic[1])
                 .country(basic[2])
-                .cityOrIcao(basic.size() > 4 ? basic[4] : null)
+                .cityOrIcaoOrAircraft(basic.size() > 4 ? basic[4] : null)
                 .active(FileSystem.isActive(basic[3]))
             
             if (line.size() > 1) {

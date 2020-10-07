@@ -1,20 +1,43 @@
 package msfsmodmanager.ui;
 
+import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.font.TextAttribute;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import msfsmodmanager.Main;
+import msfsmodmanager.util.Browser;
+import msfsmodmanager.logic.ModDeleter;
+
+import static msfsmodmanager.logic.ErrorHandler.ErrorType;
 
 public class ErrorFrame extends javax.swing.JFrame {
+    private static final Font LINK_FONT;
 
     private String message;
     private String details;
+    private String stackTrace;
+    private ErrorType errorType;
+    
+    static {
+        Map<TextAttribute, Integer> fontAttributes = new HashMap<TextAttribute, Integer>();
+        fontAttributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+        LINK_FONT = new java.awt.Font("Tahoma", 1, 11).deriveFont(fontAttributes);
+    }
 
     /**
      * Creates new form ErrorFrame
      */
-    public ErrorFrame(String message, String details) {
+    public ErrorFrame(String title, String message, String details, String stackTrace, ErrorType errorType) {
+        setTitle("MSFS ModSelector: " + title);
         this.message = message;
         this.details = details;
+        this.stackTrace = stackTrace;
+        this.errorType = errorType;
+        
         initComponents();
         
         addWindowListener(new WindowAdapter() {
@@ -33,51 +56,144 @@ public class ErrorFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        scrollPane = new javax.swing.JScrollPane();
-        detailsTextArea = new javax.swing.JTextArea();
+        stacktracePanel = new javax.swing.JPanel();
+        if (stackTrace == null) {
+            stacktracePanel.setVisible(false);
+        }
+        stacktraceInfoPanel = new javax.swing.JPanel();
+        stacktraceInfoLabel1 = new javax.swing.JLabel();
+        stacktraceInfoLabel2 = new javax.swing.JLabel();
+        stacktraceInfoLabel3 = new javax.swing.JLabel();
+        stacktraceInfoLabel4 = new javax.swing.JLabel();
+        stacktraceInfoLabel5 = new javax.swing.JLabel();
+        stacktraceScrollPane = new javax.swing.JScrollPane();
+        stacktraceTextArea = new javax.swing.JTextArea();
         topPanel = new javax.swing.JPanel();
         messageLabel = new javax.swing.JLabel();
+        detailsScrollPane = new javax.swing.JScrollPane();
+        detailsTextArea = new javax.swing.JTextArea();
         bottomPanel = new javax.swing.JPanel();
-        okButton = new javax.swing.JButton();
+        duplicatesDeleteButton = new javax.swing.JButton();
+        quitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(885, 487));
+        getContentPane().setLayout(new java.awt.BorderLayout(0, 4));
+
+        stacktracePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        stacktracePanel.setLayout(new java.awt.BorderLayout());
+
+        stacktraceInfoPanel.setPreferredSize(new java.awt.Dimension(681, 30));
+        stacktraceInfoPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+
+        stacktraceInfoLabel1.setText("If you believe this is a bug, please report it on ");
+        stacktraceInfoPanel.add(stacktraceInfoLabel1);
+
+        stacktraceInfoLabel2.setFont(LINK_FONT);
+        stacktraceInfoLabel2.setForeground(new java.awt.Color(0, 0, 255));
+        stacktraceInfoLabel2.setText("the project's GitHub page");
+        stacktraceInfoLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        stacktraceInfoLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                stacktraceInfoLabel2MouseReleased(evt);
+            }
+        });
+        stacktraceInfoPanel.add(stacktraceInfoLabel2);
+
+        stacktraceInfoLabel3.setText(" with the following information. Make sure to read the ");
+        stacktraceInfoPanel.add(stacktraceInfoLabel3);
+
+        stacktraceInfoLabel4.setFont(LINK_FONT);
+        stacktraceInfoLabel4.setForeground(new java.awt.Color(0, 0, 255));
+        stacktraceInfoLabel4.setText("README");
+        stacktraceInfoLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        stacktraceInfoLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                stacktraceInfoLabel4MouseReleased(evt);
+            }
+        });
+        stacktraceInfoPanel.add(stacktraceInfoLabel4);
+
+        stacktraceInfoLabel5.setText(" first.");
+        stacktraceInfoPanel.add(stacktraceInfoLabel5);
+
+        stacktracePanel.add(stacktraceInfoPanel, java.awt.BorderLayout.NORTH);
+
+        stacktraceTextArea.setColumns(20);
+        stacktraceTextArea.setRows(5);
+        stacktraceTextArea.setText(stackTrace);
+        stacktraceScrollPane.setViewportView(stacktraceTextArea);
+
+        stacktracePanel.add(stacktraceScrollPane, java.awt.BorderLayout.CENTER);
+
+        getContentPane().add(stacktracePanel, java.awt.BorderLayout.CENTER);
+
+        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        topPanel.setLayout(new java.awt.BorderLayout(0, 2));
+
+        messageLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        messageLabel.setText(message);
+        topPanel.add(messageLabel, java.awt.BorderLayout.NORTH);
 
         detailsTextArea.setColumns(20);
         detailsTextArea.setRows(5);
-        scrollPane.setViewportView(detailsTextArea);
         detailsTextArea.setText(details);
+        detailsScrollPane.setViewportView(detailsTextArea);
 
-        getContentPane().add(scrollPane, java.awt.BorderLayout.CENTER);
-
-        topPanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        topPanel.setLayout(new java.awt.BorderLayout());
-
-        messageLabel.setText("jLabel1");
-        topPanel.add(messageLabel, java.awt.BorderLayout.NORTH);
-        messageLabel.setText(message);
+        topPanel.add(detailsScrollPane, java.awt.BorderLayout.CENTER);
+        detailsScrollPane.setVisible(details != null);
 
         getContentPane().add(topPanel, java.awt.BorderLayout.NORTH);
+        if (stackTrace == null) {
+            getContentPane().remove(topPanel);
+            getContentPane().add(topPanel, java.awt.BorderLayout.CENTER);
+        }
 
         bottomPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-        okButton.setText("OK");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
+        duplicatesDeleteButton.setText("DELETE the duplicates in the Temp folder NOW");
+        duplicatesDeleteButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+                duplicatesDeleteButtonActionPerformed(evt);
             }
         });
-        bottomPanel.add(okButton);
+        bottomPanel.add(duplicatesDeleteButton);
+        if (errorType != ErrorType.DUPLICATE_MODS) {
+            duplicatesDeleteButton.setVisible(false);
+        }
+
+        quitButton.setText("Quit");
+        quitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitButtonActionPerformed(evt);
+            }
+        });
+        bottomPanel.add(quitButton);
 
         getContentPane().add(bottomPanel, java.awt.BorderLayout.SOUTH);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
+    private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
         System.exit(1);
-    }//GEN-LAST:event_okButtonActionPerformed
+    }//GEN-LAST:event_quitButtonActionPerformed
 
-    public static void show(String message, String details) {
+    private void stacktraceInfoLabel4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel4MouseReleased
+        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector");
+    }//GEN-LAST:event_stacktraceInfoLabel4MouseReleased
+
+    private void stacktraceInfoLabel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel2MouseReleased
+        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector/issues");
+    }//GEN-LAST:event_stacktraceInfoLabel2MouseReleased
+
+    private void duplicatesDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicatesDeleteButtonActionPerformed
+        ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
+        setVisible(false);
+        Main.restart();
+    }//GEN-LAST:event_duplicatesDeleteButtonActionPerformed
+
+    public static void show(String title, String message, String details, String stackTrace, ErrorType errorType) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -104,17 +220,27 @@ public class ErrorFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ErrorFrame(message, details).setVisible(true);
+                new ErrorFrame(title, message, details, stackTrace, errorType).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
+    private javax.swing.JScrollPane detailsScrollPane;
     private javax.swing.JTextArea detailsTextArea;
+    private javax.swing.JButton duplicatesDeleteButton;
     private javax.swing.JLabel messageLabel;
-    private javax.swing.JButton okButton;
-    private javax.swing.JScrollPane scrollPane;
+    private javax.swing.JButton quitButton;
+    private javax.swing.JLabel stacktraceInfoLabel1;
+    private javax.swing.JLabel stacktraceInfoLabel2;
+    private javax.swing.JLabel stacktraceInfoLabel3;
+    private javax.swing.JLabel stacktraceInfoLabel4;
+    private javax.swing.JLabel stacktraceInfoLabel5;
+    private javax.swing.JPanel stacktraceInfoPanel;
+    private javax.swing.JPanel stacktracePanel;
+    private javax.swing.JScrollPane stacktraceScrollPane;
+    private javax.swing.JTextArea stacktraceTextArea;
     private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 }

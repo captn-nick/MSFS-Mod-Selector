@@ -26,6 +26,11 @@ class FileSystem {
             TEMP_DIR = I18N.getString("path.temp")
         }
         
+        File tempDir = new File(TEMP_DIR)
+        if (!tempDir.exists()) {
+            tempDir.mkdir()
+        }
+        
         Mods.MOD_INFO_FILE = new File(getJarPath().absolutePath + /\mods.txt/)
     }
     
@@ -37,7 +42,7 @@ class FileSystem {
         return file
     }
     
-    private static boolean isActive(String modName) {
+    public static boolean isActive(String modName) {
         return new File(MOD_DIR + $/\/$ + modName).exists()
     }
     

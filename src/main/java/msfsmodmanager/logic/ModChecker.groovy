@@ -5,7 +5,7 @@ import msfsmodmanager.model.Mod
 import msfsmodmanager.state.Mods
 
 @CompileStatic
-class ModsChecker {
+class ModChecker {
     public static List<File> findUnregisteredAndCorruptedMods(List<File> allMods) {
         return allMods.findAll {
             !(new File(it.path + /\manifest.json/).exists())

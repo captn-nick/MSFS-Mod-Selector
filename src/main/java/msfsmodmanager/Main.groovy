@@ -1,21 +1,33 @@
 package msfsmodmanager
 
 import groovy.transform.CompileStatic
-import msfsmodmanager.logic.ModsChecker
+import msfsmodmanager.ex.ModsParseException
+import msfsmodmanager.logic.ErrorHandler
+import msfsmodmanager.logic.ModChecker
 import msfsmodmanager.model.*
 import msfsmodmanager.state.*
-import msfsmodmanager.ui.ErrorFrame
 import msfsmodmanager.ui.MainFrame
 
 @CompileStatic
 class Main {
-    private static boolean showErrorsAsPopups = true
-    
     public static void main(String[] args) {
+        try {
+            start(args)
+        }
+        catch(Exception ex) {
+            ErrorHandler.handleGlobalError(ex)
+        }
+    }
+    
+    private static void start(String[] args) {
         if ("--dontShowErrorPopups" in args) {
-            showErrorsAsPopups = false
+            ErrorHandler.showErrorsAsPopups = false
         }
         
+        restart()
+    }
+    
+    public static void restart() {
         if (init()) {
             MainFrame.main()
         }
@@ -39,10 +51,11 @@ class Main {
     }
     
     private static boolean checkUnregisteredAndCorruptedMods(List<File> allMods) {
-        List<File> modFiles = ModsChecker.findUnregisteredAndCorruptedMods(allMods)
+        List<File> modFiles = ModChecker.findUnregisteredAndCorruptedMods(allMods)
         if (!modFiles.empty) {
-            return error(
-                "!!! Found mods which weren't registered and have a corrupted directory structure:",
+            return ErrorHandler.error(
+                "Error.010",
+                "Found mods which weren't registered and have a corrupted directory structure:",
                 modFiles*.name.join("\n")
             )
         }
@@ -50,21 +63,25 @@ class Main {
     }
     
     private static boolean checkDuplicatedMods(List<File> allMods) {
-        List<String> modNames = ModsChecker.findDuplicatedMods(allMods)
+        List<String> modNames = ModChecker.findDuplicatedMods(allMods)
         if (!modNames.empty) {
-            return error(
-                "!!! Found mods which are duplicated (one in Community, one in Temp folder):",
-                modNames.join("\n")
+            return ErrorHandler.error(
+                "Error.020",
+                "Found mods which are duplicated (one in Community, one in Temp folder):",
+                modNames.join("\n"),
+                null,
+                ErrorHandler.ErrorType.DUPLICATE_MODS
             )
         }
         return true
     }
     
     private static boolean checkUnregisteredMods(List<File> allMods) {
-        List<String> modNames = ModsChecker.findUnregisteredMods(allMods)
+        List<String> modNames = ModChecker.findUnregisteredMods(allMods)
         if (!modNames.empty) {
-            return error(
-                "!!! Found unregistered mods:",
+            return ErrorHandler.error(
+                "Error.030",
+                "Found unregistered mods:",
                 modNames.join("\n")
             )
         }
@@ -72,10 +89,11 @@ class Main {
     }
     
     private static boolean checkUninstalledMods() {
-        List<String> modNames = ModsChecker.findUninstalledMods()
+        List<String> modNames = ModChecker.findUninstalledMods()
         if (!modNames.empty) {
-            return error (
-                "!!! Found mods which were registered but aren't present in mod directory:",
+            return ErrorHandler.error (
+                "Error.040",
+                "Found mods which were registered but aren't present in mod directory:",
                 modNames.join("\n")
             )
         }
@@ -83,27 +101,17 @@ class Main {
     }
     
     private static boolean checkCorruptedMods() {
-        List<Mod> mods = ModsChecker.findCorruptedMods()
+        List<Mod> mods = ModChecker.findCorruptedMods()
         if (!mods.empty) {
-            return error (
-                "!!! Found mods with corrupted directory structure:",
+            return ErrorHandler.error (
+                "Error.050",
+                "Found mods with corrupted directory structure:",
                 mods.collect {
                     it.name + (it.active ? "" : " (deactivated)")
                 }.join("\n")
             )
         }
         return true
-    }
-    
-    private static boolean error(String message, String details) {
-        println message
-        println details
-        if (showErrorsAsPopups) {
-            ErrorFrame.show(message, details)
-        }
-        else {
-            System.exit(0)
-        }
     }
 }
 

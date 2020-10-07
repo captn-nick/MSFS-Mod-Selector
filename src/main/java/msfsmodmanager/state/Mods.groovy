@@ -2,6 +2,7 @@ package msfsmodmanager.state
 
 import groovy.transform.CompileStatic
 import groovy.io.FileType
+import msfsmodmanager.ex.ModsParseException
 import msfsmodmanager.model.*
 import msfsmodmanager.util.StringUtil
 
@@ -25,35 +26,48 @@ class Mods {
         mods = text.split("\n").findAll {
             it.trim()
         }.collect { String it -> 
-            it = it.trim()
-            String[] line = it.split("##", -1)
-            
-            List<String> basic = StringUtil.trimEnd(line[0]).split("\t", -1) as List
-            
-            String type = basic[0]
-            Mod.Builder builder = Mod.name(basic[3])
-                .type(basic[0])
-                .continent(basic[1])
-                .country(basic[2])
-                .cityOrIcaoOrAircraft(basic.size() > 4 ? basic[4] : null)
-                .active(FileSystem.isActive(basic[3]))
-            
-            if (line.size() > 1) {
-                List<String> more = StringUtil.trimStart(line[1]).split("\t", -1) as List
-                builder = builder
-                    .description(more[0])
-                    .author(more[1])
-                    .url(more[2])
+            try {
+                parseLine(it)
             }
-            
-            Mod mod = builder.mod()
-            
-            if (!mod.type) {
-                throw new RuntimeException("No mod type defined for $line.")
+            catch (Exception ex) {
+                throw new ModsParseException.LineParseException(it, ex)
             }
-            
-            return mod
         }
+    }
+    
+    private static Mod parseLine(String it) {
+        it = it.trim()
+        String[] line = it.split("##", -1)
+
+        List<String> basic = StringUtil.trimEnd(line[0]).split("\t", -1) as List
+
+        String type = basic[0]
+        Mod.Builder builder = Mod.name(basic[3])
+            .type(basic[0])
+            .continent(basic[1])
+            .country(basic[2])
+            .cityOrIcaoOrAircraft(basic.size() > 4 ? basic[4] : null)
+            .active(FileSystem.isActive(basic[3]))
+
+        if (line.size() > 1) {
+            List<String> more = StringUtil.trimStart(line[1]).split("\t", -1) as List
+            builder = builder
+                .description(more[0])
+                .author(more[1])
+                .url(more[2])
+        }
+
+        Mod mod = builder.mod()
+
+        if (!mod.name) {
+            throw new ModsParseException.NoModNameForLineParseException(it)
+        }
+        if (!mod.type) {
+            throw new ModsParseException.NoModTypeForLineParseException(it)
+        }
+        
+
+        return mod
     }
     
     public static List<File> findAllMods() {

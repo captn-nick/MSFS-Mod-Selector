@@ -23,7 +23,6 @@ It is highly recommended that you create a backup of your mods (MSFS Community f
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.5: Improved error handling.
 * V. 0.6: Config file cleanup
 * V. 0.7: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
 * V. 0.8: Make continent sub-panel sizes adjustable; show mod selection feedback.

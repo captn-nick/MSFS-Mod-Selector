@@ -34,7 +34,7 @@ All of this is subject to change.
 Mod Selector requires Java to run.
 
 ## Download
-Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.4/MsfsModSelector.0.4.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
+Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.5/MsfsModSelector.0.5.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
 The program consists of 3 components:

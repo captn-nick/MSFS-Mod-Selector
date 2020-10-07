@@ -36,7 +36,6 @@ Mod Selector requires Java to run.
 ## Download
 Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.4/MsfsModSelector.0.4.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
-
 ## Content
 The program consists of 3 components:
 * **MsfsModSelector.jar**: the program file.
@@ -47,7 +46,6 @@ The program consists of 3 components:
 No setup is required.
 
 1. **Simply unzip the content of the ZIP file into the MSFS “Packages” folder.**
-1. **Then, create a “Temp” sub-folder in the MSFS “Packages”.**
 1.	**You will need to add all mods which you want to manage manually to mods.txt first, see below.**
 1. **Finally, start the Mod Selector by double-clicking the program file or via the command line, see below.**
 
@@ -57,10 +55,10 @@ Make sure that the directory structure is correct:
   * config.properties
   * mods.txt
   * Community/
-  * Temp/
+  * _Temp/_
   * (other folders of MSFS)
 
-If you placed the Mod Selector into your MSFS “Packages” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. **You need to create the “Temp” sub-folder if it doesn’t exist already before starting the program.**
+If you placed the Mod Selector into your MSFS “Packages” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. Mod Selector will create the “Temp” directly if it doesn't exist already.
 
 Alternatively, you can config those paths manually, see below.
 
@@ -155,6 +153,16 @@ In that way, selecting an entire continent / country (with cities) actually mean
 ## Warnings and errors
 At the start, the Mod Selector will check your mod registry and your directories for problems and show you an error message if it found any. You cannot start the Mod Selector without first resolving those issues.
 
+Each error is designated with an ID. It can be found in the error UI’s header (or in the printout on the command line). Please note the following tips for helping you solve the issue at hand:
+* **Error.001**: An unexpected freak error. Possibly, there is something very wrong with your system or configuration. Make sure you followed this README exactly for the setup. If you did so, this is possibly a bug. Please report it by opening an issue.
+* **Error.010**: Found mods which weren't registered and have a corrupted directory structure: a combination of Error.030 and Error.050. see below on how to fix them individually.
+* **Error.020**: Found mods which are duplicated (one in Community, one in Temp folder): as the text says. This may happen if you moved all mods into the Temp folder first (using the “Deactivate all” function, and then added new versions of these mods into the Community folder while the old version of the mod (with the same folder name) is still present in the Temp folder. In this case, the UI will present you with the additional option to delete the surplus mod folder in the Temp directory. Not that if you click that button, that mod folder will be deleted immediately and permanently!
+* **Error.030**: Found unregistered mods: You have some mod folders which don’t correspond to an entry in your mods.txt file. Make sure to register each mod with a mods.txt entry first. See “Adding a mod” above, or delete the mod’s folder.
+* **Error.040**: Found mods which were registered but aren't present in mod directory: The opposite of Error.030: You have a mods.txt entry for a mod which isn’t present as a sub-folder of either the Community or Temp directory. Either restore that folder from another place or delete the entry in question from the mods.txt file.
+* **Error.050**: Found mods with corrupted directory structure: Each mod sub-folder must contain a manifest.json file on the first level of its folder hierarchy. If this is not the case, this was typically the result of the mod being incorrectly ZIPped / unzipped, i.e. with surplus directories. Make sure the directory structure for all mods is correct. Note that some mods may actually consist of more than one MSFS mod directory! In that case, you need to register each of these directories as individual mods in mods.txt.
+* **Error.100**: General mods.txt line read error: Mod Selector cannot read an invidual line in your mods.txt file. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
+* **Error.101**: mods.txt line information read error: Mod Selector can read an invidual line in your mods.txt file, but it can’t interpret a critical piece of information. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
+
 ## Starting from the command line
 Instead of double-clicking on the program file, you can start the program from the command line / PowerShell with
 
@@ -179,26 +187,32 @@ Known limitations include:
 * Mod Selector will not remember the last selection but always start up in the default selection.
 * Only limited possibilities to re-arrange geographical areas on the UI.
 * Doesn’t help identifying individual mods. Mods are simply kept in their (oftentimes chaotically named) directory structures.
-* Only limited error handling and feedback.
 * (Development: unclean build process.)
 * And probably a few more improvements which would be “nice to have”…
 
 ## Version history
-* 0.1: Initial release
-* 0.2:
-  * warning/error feedback through UI;
-  * configuration for mod types, including default selection;
-  * bugfix for UTF-8 support.
-* 0.3:
-  * ability to add more meta-information to individual mods: ICAO code, description, author, website;
-  * added new continent “other/fictional”.
+* 0.5:
+  * full UI-based error handling (additional error handling on command line as well);
+  * detailed error feedback for mods.txt parsing;
+  * assisted handling for updated / duplicated mods;
+  * create Temp dir at startup if not present.
 * 0.4:
   * added “aircraft” and “other” mod types;
   * added aircraft-specific mod sub-categories;
   * support for 3-character ICAO codes;
   * startup bugfix for empty mods.txt file.
+* 0.3:
+  * ability to add more meta-information to individual mods: ICAO code, description, author, website;
+  * added new continent “other/fictional”.
+* 0.2:
+  * warning/error feedback through UI;
+  * configuration for mod types, including default selection;
+  * bugfix for UTF-8 support.
+* 0.1: Initial release
 
 ## Upgrade guide
+* 0.4 -> 0.5:
+  * (fully backward-compatible)
 * 0.3 -> 0.4:
   * Make sure to add the ```ModType.AL``` / ```ModType.AM``` / ```ModType.OT``` sections as well as the ```AircraftType``` entry and the ```AircraftType.XY``` sections to your config.properties file.
   * For livrery mods, please change the mod type id ```LI``` to the new id ```AL``` for your mods.txt entries.
@@ -212,6 +226,8 @@ Known limitations include:
 
 ## Troubleshooting
 If there is a problem (e.g. the program doesn’t start up on double click), start it from the command line (see above) to make sure all errors are shown.
+
+For details, see "Warnings and errors" above.
 
 ## For Developers
 This project was built using the NetBeans IDE. JFrames and JPanels are created and edited with the IDE’s Swing editor.

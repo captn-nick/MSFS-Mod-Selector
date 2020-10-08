@@ -23,7 +23,6 @@ It is highly recommended that you create a backup of your mods (MSFS Community f
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.6: Config file cleanup
 * V. 0.7: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
 * V. 0.8: Make continent sub-panel sizes adjustable; show mod selection feedback.
 * V. 0.9: Intelligent wizard for adding mods to mods.txt.
@@ -33,7 +32,7 @@ All of this is subject to change.
 Mod Selector requires Java to run.
 
 ## Download
-Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.5/MsfsModSelector.0.5.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
+Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.6/MsfsModSelector.0.6.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
 The program consists of 3 components:
@@ -52,10 +51,13 @@ Make sure that the directory structure is correct:
 * Packages/
   * MsfsModSelector.jar
   * config.properties
+  * _labels.properties_
   * mods.txt
   * Community/
   * _Temp/_
   * (other folders of MSFS)
+
+Files / folders in _italics_ are options, see below.
 
 If you placed the Mod Selector into your MSFS “Packages” folder, the Mod Selector will recognize the sub-folder “Community” as the directory to place all active mods into, and the sub-folder “Temp” as the directory to temporarily store deactivated mods. Mod Selector will create the “Temp” directly if it doesn't exist already.
 
@@ -72,20 +74,52 @@ The following keys are of note:
 * ```path.community```: the full path of the Community mod directory
 * ```path.temp```: the full path of the temporary mod directory. Disabled mods will be stored here.
 * ```ModType.defaultSelection```: defines which mod types are selected by default.
-* ```ModType.XY```: defines the name of mod type XY as it is displayed in the UI.
-* ```AircraftType```: defines the title of the “aircraft” section as it is displayed in the UI.
-* ```AircraftType.XY```: defines the name of aircraft type XY as it is displayed in the UI.
 * ```Continent.XY.Countries```: defines which countries to show in the UI for individual selection and in which order for continent XY.
-* ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
-* ```Country.XY```: defines the name of country XY as it is displayed in the UI.
 * ```Country.XY.showCities```: set to ```=false``` to not show any individual cities for this particular country in the UI. Defaults to ```=true```.
 * ```Cities.minMods```: defines the minimum number of mods which must be linked to a city in order to show it individually in the UI.
 
 Note:
 * For the paths, backslashes have to be doubled (```\\``` instead of ```\```).
-* You are free to define your own countries. As long as at least one mod is designated to this country (and defines a continent as well), Mod Selector will be able to link this country to its continent, i.e. a country does not have to be listed explicitly in any Continent.XY.Countries entry.
+* You are free to define your own countries. As long as at least one mod is designated to this country (and defines a continent as well), Mod Selector will be able to link this country to its continent, i.e. a country does not have to be listed explicitly in any ```Continent.XY.Countries``` entry. To do so, add a new country definition to your labels file (see below) and, optionally, use it in a ```Continent.XY.Countries``` definition.
 * You are free to define your own cities simply by linking them to any mod (see below). For cities, no config is required. All cities explicitly linked to any mod will show up in the UI in alphabetical order.
 * The US are their own continent simply because that way we can group mods on two levels by state and city which seems to make sense.
+
+## Labels
+Mod Selector comes with pre-defined labels for mod types, continents, countries, and more. However, you can change those labels or add your own ones (e.g. to add available countries).
+
+For this, simply create a **labels.properties** file in the folder which contains the program file.
+
+labels.properties uses the same key-value entry format as config.properties.
+
+The following keys are of note:
+* ```ModType.XY```: defines the name of mod type XY as it is displayed in the UI.
+* ```AircraftType```: defines the title of the “aircraft” section as it is displayed in the UI.
+* ```AircraftType.XY```: defines the name of aircraft type XY as it is displayed in the UI.
+* ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
+* ```Country.XYZ``` / ```Country.XY```: defines the name of US state XYZ / country XY is it is displayed in the UI.
+
+Note:
+* To add a country to Mod Selector, simply add its definition to labels.properties and use it in your mods.properties file. As long as at least one mod is designated to this country (and defines a continent as well), Mod Selector will be able to link this country to its continent. Optionally, add it to the ```Continent.XY.Countries``` definition in your config file (see above) to explicitly show it for individual selection in the UI.
+
+### An explicitly non-political statement
+The default country definition Mod Selector uses, as defined by its labels.properties file, is based on the [ISO 3166-1 alpha-3 country ISO codes for countries](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Current_codes) (3 characters) and the [ISO 3166-2:US codes for US states](https://en.wikipedia.org/wiki/ISO_3166-2:US#Current_codes) (2 characters).
+
+However, these have been slightly modified where it made sense from a geographical or usability point of view.
+
+A geographical reason could be: “Does it make sense to divide a single rather small landmass into even smaller parts just to respect political borders or would a simulator pilot rather load either all or no mods for the complete landmass in question?” / “Does it make sense to have a large landmass with a large amount of mods to would it be useful to divide it In an easily recognizable way?” / “Does it make sense to have a country labeled by its full official name even if it distorts the UI or is it more reasonable to use a short name anyone understands?” As you can see, these questions are in no way politically motivated.
+
+Most importantly and most prominently, we have merged the two independent countries of Saint Martin (MAF) and Sint Maarten (SXM) into a single country definition ```Country.MAF=Saint Martin```. These are the two parts of an island of 34 sq mi in the Caribbean Sea, about equally divided into a French and a Dutch side. Clearly, it doesn’t seem to make sense to show them separately in the UI.
+
+With that out of the way, let’s see some other examples:
+* ```Country.GBR=UK  - mid/south```: for UK Great Britain without Scotland
+* ```Country.Sco=UK - Scotland```: for Scotland
+* ```Country.IRL=Ireland / N. Ireland```: for the entire island, not just the Republic of Ireland
+* ```Country.IRN=Iran```: official prefix “Islamic Republic of” omitted
+* (```Country.VAT=Holy See```: removed because really Vatican City is part of Rome, Italy)
+
+As written above, you are free to completely change these definitions to your liking.
+
+However, for a possible future online central repository, we plan to restrict interpretation to these canonical definitions.
 
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
@@ -161,6 +195,8 @@ Each error is designated with an ID. It can be found in the error UI’s header 
 * **Error.050**: Found mods with corrupted directory structure: Each mod sub-folder must contain a manifest.json file on the first level of its folder hierarchy. If this is not the case, this was typically the result of the mod being incorrectly ZIPped / unzipped, i.e. with surplus directories. Make sure the directory structure for all mods is correct. Note that some mods may actually consist of more than one MSFS mod directory! In that case, you need to register each of these directories as individual mods in mods.txt.
 * **Error.100**: General mods.txt line read error: Mod Selector cannot read an invidual line in your mods.txt file. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
 * **Error.101**: mods.txt line information read error: Mod Selector can read an invidual line in your mods.txt file, but it can’t interpret a critical piece of information. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
+* **Error.110**: Duplicate mod definition found: Mod Selector found two entries with the name mod name in mods.txt. Remove one of the duplicates.
+* **Error.111**: Inconsistent mod information found: Mod Selector found two entries in mods.txt which contradict each other. This can be e.g. because the two use the same city, but belong to a different country / continent. Correct the entries in question. Note that city names must be unique among all countries and continents.
 
 ## Starting from the command line
 Instead of double-clicking on the program file, you can start the program from the command line / PowerShell with
@@ -190,6 +226,13 @@ Known limitations include:
 * And probably a few more improvements which would be “nice to have”…
 
 ## Version history
+* 0.6:
+  * config split into I18N labels (typically interchangeable between users) and local config (typically specific to a user’s setup and preferences);
+  * added pre-defined names/labels for all countries and US states;
+  * automated country / city consistency check;
+  * added error recognition for illegal continents and duplicate mods;
+  * added line number information to all mods.txt line parsing errors;
+  * general UI error handling improved.
 * 0.5:
   * full UI-based error handling (additional error handling on command line as well);
   * detailed error feedback for mods.txt parsing;
@@ -210,8 +253,14 @@ Known limitations include:
 * 0.1: Initial release
 
 ## Upgrade guide
+* 0.5 -> 0.6:
+  * Move your ```ModType.XY```, ```AircraftType```, ```AircraftType.XY```, ```Continent.XY```, and ```Country.XY``` definitions from config.properties into labels.properties or simply remove them to use the implicit pre-defined labels (recommended).
+  * Make sure that your ```Country.XY``` definitions in labels.properties as well as your country references in mods.txt use the new ```Country.XYZ``` 3-letter abbreviation of country codes if you want to use the official definition (recommended). ```Country.XY``` 2-letter abbreviations are now designated for US states only.
+  * Note that moreover several former default “XY” definitions have changed. Most notably: ```Continent.OC``` (formerly Continent.OZ), ```Country.AK``` (formerly ```Country.AL```), ```Country.DE``` (used to abbreviate “Germany”, now abbreviates “Delaware”).
+  * Note that a mods.txt entry with an illegal continent or a duplicate mod name will now explicitly raise an error.
+  * Note that moreover if in mods.txt there is a conflict between linking a city/country to a continent or a city to a country, an error will be raised.
 * 0.4 -> 0.5:
-  * (fully backward-compatible)
+  * Note that a mods.txt entry with an illegal / empty mod name or mod type will now explicitly raise an error.
 * 0.3 -> 0.4:
   * Make sure to add the ```ModType.AL``` / ```ModType.AM``` / ```ModType.OT``` sections as well as the ```AircraftType``` entry and the ```AircraftType.XY``` sections to your config.properties file.
   * For livrery mods, please change the mod type id ```LI``` to the new id ```AL``` for your mods.txt entries.
@@ -232,6 +281,6 @@ For details, see "Warnings and errors" above.
 This project was built using the NetBeans IDE. JFrames and JPanels are created and edited with the IDE’s Swing editor.
 
 ## Closing note
-This program will also be available for download through https://flightsim.to/.
+This program is also available for download at https://flightsim.to/file/1124/mod-selector.
 
 ## Happy Flying!

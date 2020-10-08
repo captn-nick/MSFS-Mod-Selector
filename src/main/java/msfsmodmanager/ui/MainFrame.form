@@ -213,7 +213,7 @@
             </Container>
             <Container class="javax.swing.JPanel" name="continentsPanel4">
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="continentsPanel4.add(oz);&#xd;&#xa;continentsPanel4.add(aa);&#xd;&#xa;continentsPanel4.add(of);&#xd;&#xa;continentsPanel4.add(aircraftPanel);"/>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="continentsPanel4.add(oc);&#xd;&#xa;continentsPanel4.add(aa);&#xd;&#xa;continentsPanel4.add(of);&#xd;&#xa;continentsPanel4.add(aircraftPanel);"/>
               </AuxValues>
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">

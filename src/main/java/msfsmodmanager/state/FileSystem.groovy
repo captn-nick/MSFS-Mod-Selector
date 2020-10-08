@@ -5,7 +5,7 @@ import java.nio.file.Files
 import static java.nio.file.StandardCopyOption.*;
 import msfsmodmanager.Main
 import msfsmodmanager.model.*
-import msfsmodmanager.ui.I18N
+import msfsmodmanager.state.Config
 
 @CompileStatic
 class FileSystem {
@@ -13,17 +13,17 @@ class FileSystem {
     public static String TEMP_DIR
     
     public static void init() {
-        MOD_DIR = I18N.getString("path.community")
-        TEMP_DIR = I18N.getString("path.temp")
+        MOD_DIR = Config.getString("path.community")
+        TEMP_DIR = Config.getString("path.temp")
         
         if (MOD_DIR == "") {
-            I18N.setString("path.community", getJarPath().absolutePath + /\Community/)
-            MOD_DIR = I18N.getString("path.community")
+            Config.setString("path.community", getJarPath().absolutePath + /\Community/)
+            MOD_DIR = Config.getString("path.community")
         }
         
         if (TEMP_DIR == "") {
-            I18N.setString("path.temp", getJarPath().absolutePath + /\Temp/)
-            TEMP_DIR = I18N.getString("path.temp")
+            Config.setString("path.temp", getJarPath().absolutePath + /\Temp/)
+            TEMP_DIR = Config.getString("path.temp")
         }
         
         File tempDir = new File(TEMP_DIR)

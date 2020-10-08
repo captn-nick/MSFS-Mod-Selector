@@ -2,6 +2,7 @@ package msfsmodmanager.ex
 
 import groovy.transform.CompileStatic
 import groovy.transform.TupleConstructor
+import msfsmodmanager.model.FirstDefinition
 
 @CompileStatic
 abstract class ModsParseException extends RuntimeException {
@@ -18,10 +19,12 @@ abstract class ModsParseException extends RuntimeException {
 
     public static class LineParseException extends ModsParseException {
         String line
+        int lineNo
         
-        public LineParseException(String line, String info="Cannot read the following line in mods.txt:", Exception cause) {
+        public LineParseException(String line, int lineNo, String info="Cannot read line ${lineNo} in mods.txt:", Exception cause) {
             super(info, cause)
             this.line = line
+            this.lineNo = lineNo
         }
         
         public String getMessage() {
@@ -29,22 +32,30 @@ abstract class ModsParseException extends RuntimeException {
         }
     }
     
-    public abstract static class MissingDataForLineParseException extends LineParseException {
-        public MissingDataForLineParseException(String information, String line) {
-            super(line, /Cannot read "$information" information for the following line in mods.txt:/, null)
+    public static class MissingDataForLineParseException extends LineParseException {
+        public MissingDataForLineParseException(String information, String line, int lineNo) {
+            super(line, lineNo, /Cannot read "$information" information for line ${lineNo} in mods.txt:/, null)
         }
     }
     
-    public static class NoModNameForLineParseException extends MissingDataForLineParseException {
-        public NoModNameForLineParseException(String line) {
-            super("mod name", line)
+    public static class DuplicateModNameForLineParseException extends LineParseException {
+        public DuplicateModNameForLineParseException(FirstDefinition first, String conflictingLine, int lineNo) {
+            super(extractLineInformation(first, conflictingLine, lineNo), lineNo, /Duplicate mod definition found in mods.txt:/, null)
         }
     }
     
-    public static class NoModTypeForLineParseException extends MissingDataForLineParseException {
-        public NoModTypeForLineParseException(String line) {
-            super("mod type", line)
+    public static class ConflictingDataForLineParseException extends LineParseException {
+        public ConflictingDataForLineParseException(String information, FirstDefinition first, String conflictingLine, int lineNo) {
+            super(extractLineInformation(first, conflictingLine, lineNo), lineNo, /Inconsistent "$information" information found in mods.txt:/, null)
         }
+    }
+    
+    private static String extractLineInformation(FirstDefinition first, String conflictingLine, int lineNo) {
+            return """- Original definition in line ${first.lineNo}:
+${first.line}
+
+- Conflicting definition in line ${lineNo}:
+${conflictingLine}"""
     }
 }
 

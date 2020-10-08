@@ -3,7 +3,7 @@ package msfsmodmanager.model
 import groovy.transform.CompileStatic
 import groovy.transform.TupleConstructor
 
-import msfsmodmanager.ui.I18N
+import msfsmodmanager.state.Config
 
 @CompileStatic
 @TupleConstructor
@@ -20,8 +20,8 @@ enum ModType {
     public static List<ModType> defaultSelection
     
     static {
-        String i18n = I18N.getString("ModType.defaultSelection")
-        defaultSelection = (i18n.split(", ") as List<String>).collect {
+        String config = Config.getString("ModType.defaultSelection")
+        defaultSelection = (config.split(", ") as List<String>).collect {
             parse(it)
         }
     }

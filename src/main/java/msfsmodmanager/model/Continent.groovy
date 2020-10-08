@@ -1,7 +1,8 @@
 package msfsmodmanager.model
 
 import groovy.transform.CompileStatic
-import msfsmodmanager.ui.I18N
+import msfsmodmanager.ex.ModsParseException
+import msfsmodmanager.state.Config
 
 @CompileStatic
 class Continent {
@@ -11,7 +12,7 @@ class Continent {
     public static Continent SA = new Continent("SA")
     public static Continent AF = new Continent("AF")
     public static Continent AS = new Continent("AS")
-    public static Continent OZ = new Continent("OZ")
+    public static Continent OC = new Continent("OC")
     public static Continent AA = new Continent("AA")
     public static Continent OF = new Continent("OF")
     
@@ -22,7 +23,7 @@ class Continent {
         SA: SA,
         AF: AF,
         AS: AS,
-        OZ: OZ,
+        OC: OC,
         AA: AA,
         OF: OF,
     ]
@@ -46,13 +47,29 @@ class Continent {
     
     public static void loadContinents() {
         BY_NAME.each { k, v ->
-            v.setCountries(I18N.getString("Continent.${k}.Countries"))
+            v.setCountries(Config.getString("Continent.${k}.Countries"))
         }
     }
     
     public static boolean belongsToAnyContinent(String country) {
         return BY_NAME.any { k, v ->
             country in v.countries
+        }
+    }
+    
+    public static void checkCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
+        if (!mod.country) {
+            return
+        }
+        
+        if (!FirstDefinition.CONTINENT_BY_COUNTRY[mod.country]) {
+            FirstDefinition.CONTINENT_BY_COUNTRY[mod.country] = new FirstDefinition(line, lineNo, mod)
+        }
+        else {
+            FirstDefinition firstDefinition = FirstDefinition.CONTINENT_BY_COUNTRY[mod.country]
+            if (firstDefinition.mod.continent != mod.continent) {
+                throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
+            }
         }
     }
     

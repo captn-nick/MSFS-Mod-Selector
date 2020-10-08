@@ -2,7 +2,8 @@ package msfsmodmanager.model
 
 import groovy.transform.CompileStatic
 import msfsmodmanager.state.Mods
-import msfsmodmanager.ui.I18N
+import msfsmodmanager.state.Config
+import msfsmodmanager.ex.ModsParseException
 
 @CompileStatic
 class Cities {
@@ -47,12 +48,44 @@ class Cities {
     }
     
     private static showCitiesFor(String country) {
-        String ret = I18N.getStringOrNull("Country.${country}.showCities")
+        String ret = Config.getStringOrNull("Country.${country}.showCities")
         return ret == null || ret == "true"
     }
     
     private static boolean showCitiesFor(int occurrences) {
-        return occurrences >= (I18N.getString("Cities.minMods") as int)
+        return occurrences >= (Config.getString("Cities.minMods") as int)
+    }
+    
+    public static void checkCityCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
+        if (!mod.city) {
+            return
+        }
+        
+        if (!FirstDefinition.COUNTRY_BY_CITY[mod.city]) {
+            FirstDefinition.COUNTRY_BY_CITY[mod.city] = new FirstDefinition(line, lineNo, mod)
+        }
+        else {
+            FirstDefinition firstDefinition = FirstDefinition.COUNTRY_BY_CITY[mod.city]
+            if (firstDefinition.mod.country != mod.country) {
+                throw new ModsParseException.ConflictingDataForLineParseException("country", firstDefinition, line, lineNo)
+            }
+        }
+    }
+    
+    public static void checkCityContinentDefinitionConsistency(String line, int lineNo, Mod mod) {
+        if (!mod.city) {
+            return
+        }
+        
+        if (!FirstDefinition.CONTINENT_BY_CITY[mod.city]) {
+            FirstDefinition.CONTINENT_BY_CITY[mod.city] = new FirstDefinition(line, lineNo, mod)
+        }
+        else {
+            FirstDefinition firstDefinition = FirstDefinition.CONTINENT_BY_CITY[mod.city]
+            if (firstDefinition.mod.continent != mod.continent) {
+                throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
+            }
+        }
     }
 }
 

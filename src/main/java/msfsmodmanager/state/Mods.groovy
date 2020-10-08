@@ -25,17 +25,29 @@ class Mods {
         
         mods = text.split("\n").findAll {
             it.trim()
-        }.collect { String it -> 
+        }.withIndex().collect { String it, int i ->
+            i = i+1
+            
+            Mod mod
             try {
-                parseLine(it)
+                mod = parseLine(it, i)
             }
             catch (Exception ex) {
-                throw new ModsParseException.LineParseException(it, ex)
+                throw new ModsParseException.LineParseException(it, i, ex)
             }
+            
+            checkDuplicateModNames(it, i, mod)
+            Cities.checkCityCountryDefinitionConsistency(it, i, mod)
+            Continent.checkCountryDefinitionConsistency(it, i, mod)
+            Cities.checkCityContinentDefinitionConsistency(it, i, mod)
+            
+            return mod
         }
+        
+        resetDuplicateModNames()
     }
     
-    private static Mod parseLine(String it) {
+    private static Mod parseLine(String it, int i) {
         it = it.trim()
         String[] line = it.split("##", -1)
 
@@ -60,14 +72,31 @@ class Mods {
         Mod mod = builder.mod()
 
         if (!mod.name) {
-            throw new ModsParseException.NoModNameForLineParseException(it)
+            throw new ModsParseException.MissingDataForLineParseException("mod name", it, i)
         }
         if (!mod.type) {
-            throw new ModsParseException.NoModTypeForLineParseException(it)
+            throw new ModsParseException.MissingDataForLineParseException("mod type", it, i)
+        }
+        if (basic[1] && !mod.continent) {
+            throw new ModsParseException.MissingDataForLineParseException("continent", it, i)
         }
         
 
         return mod
+    }
+    
+    private static checkDuplicateModNames(String line, int lineNo, Mod mod) {
+        if (!FirstDefinition.MOD_NAMES[mod.name]) {
+            FirstDefinition.MOD_NAMES[mod.name] = new FirstDefinition(line, lineNo, mod)
+        }
+        else {
+            FirstDefinition firstDefinition = FirstDefinition.MOD_NAMES[mod.name]
+            throw new ModsParseException.DuplicateModNameForLineParseException(firstDefinition, line, lineNo)  
+        }
+    }
+    
+    private static resetDuplicateModNames() {
+        FirstDefinition.MOD_NAMES.clear()
     }
     
     public static List<File> findAllMods() {

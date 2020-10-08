@@ -2,6 +2,7 @@ package msfsmodmanager.ui;
 
 import msfsmodmanager.model.Continent;
 import msfsmodmanager.model.ModType;
+import msfsmodmanager.logic.ErrorHandler;
 
 public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel eu = new ContinentPanel(Continent.EU);
@@ -10,7 +11,7 @@ public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel sa = new ContinentPanel(Continent.SA);
     public final ContinentPanel as = new ContinentPanel(Continent.AS);
     public final ContinentPanel af = new ContinentPanel(Continent.AF);
-    public final ContinentPanel oz = new ContinentPanel(Continent.OZ);
+    public final ContinentPanel oc = new ContinentPanel(Continent.OC);
     public final ContinentPanel aa = new ContinentPanel(Continent.AA);
     public final ContinentPanel of = new ContinentPanel(Continent.OF);
     
@@ -50,7 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         continentsPanel3.add(as);
         continentsPanel3.add(af);
         continentsPanel4 = new javax.swing.JPanel();
-        continentsPanel4.add(oz);
+        continentsPanel4.add(oc);
         continentsPanel4.add(aa);
         continentsPanel4.add(of);
         continentsPanel4.add(aircraftPanel);
@@ -134,11 +135,21 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        handler.apply();
+        try {
+            handler.apply();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        handler.deactivateAll();
+        try {
+            handler.deactivateAll();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

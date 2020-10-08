@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import msfsmodmanager.Main;
+import msfsmodmanager.logic.ErrorHandler;
 import msfsmodmanager.util.Browser;
 import msfsmodmanager.logic.ModDeleter;
 
@@ -180,17 +181,32 @@ public class ErrorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void stacktraceInfoLabel4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel4MouseReleased
-        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector");
+        try {
+            Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector");
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_stacktraceInfoLabel4MouseReleased
 
     private void stacktraceInfoLabel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel2MouseReleased
-        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector/issues");
+        try {
+            Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector/issues");
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_stacktraceInfoLabel2MouseReleased
 
     private void duplicatesDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicatesDeleteButtonActionPerformed
-        ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
-        setVisible(false);
-        Main.restart();
+        try {
+            ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
+            setVisible(false);
+            Main.restart();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_duplicatesDeleteButtonActionPerformed
 
     public static void show(String title, String message, String details, String stackTrace, ErrorType errorType) {

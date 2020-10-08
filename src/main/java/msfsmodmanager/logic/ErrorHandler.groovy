@@ -17,6 +17,26 @@ class ErrorHandler {
     
     public static void handleGlobalError(Exception ex) {
         switch (ex) {
+            case ModsParseException.DuplicateModNameForLineParseException:
+                ModsParseException.DuplicateModNameForLineParseException cdlex = (ModsParseException.DuplicateModNameForLineParseException)ex
+                error (
+                    "Error.110",
+                    cdlex.info,
+                    cdlex.line,
+                    null
+                )
+                
+            break
+            case ModsParseException.ConflictingDataForLineParseException:
+                ModsParseException.ConflictingDataForLineParseException cdlex = (ModsParseException.ConflictingDataForLineParseException)ex
+                error (
+                    "Error.111",
+                    cdlex.info,
+                    cdlex.line,
+                    null
+                )
+                
+            break
             case ModsParseException.LineParseException:
                 ModsParseException.LineParseException lpex = (ModsParseException.LineParseException)ex
                 if (ex.cause in ModsParseException.MissingDataForLineParseException) {

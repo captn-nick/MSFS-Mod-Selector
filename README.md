@@ -96,17 +96,21 @@ The following keys are of note:
 * ```AircraftType```: defines the title of the “aircraft” section as it is displayed in the UI.
 * ```AircraftType.XY```: defines the name of aircraft type XY as it is displayed in the UI.
 * ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.
-* ```Country.XYZ``` / ```Country.XY```: defines the name of US state XYZ / country XY is it is displayed in the UI.
+* ```Country.XYZ``` / ```Country.XY```: defines the name of US state XYZ / country XY as it is displayed in the UI.
 
 Note:
 * To add a country to Mod Selector, simply add its definition to labels.properties and use it in your mods.properties file. As long as at least one mod is designated to this country (and defines a continent as well), Mod Selector will be able to link this country to its continent. Optionally, add it to the ```Continent.XY.Countries``` definition in your config file (see above) to explicitly show it for individual selection in the UI.
+
+[You can find **all predefined labels** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/src/main/resources/default_labels.properties)
+
+[You can find an example of **a complete labels.properties file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/labels.properties).
 
 ### An explicitly non-political statement
 The default country definition Mod Selector uses, as defined by its labels.properties file, is based on the [ISO 3166-1 alpha-3 country ISO codes for countries](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Current_codes) (3 characters) and the [ISO 3166-2:US codes for US states](https://en.wikipedia.org/wiki/ISO_3166-2:US#Current_codes) (2 characters).
 
 However, these have been slightly modified where it made sense from a geographical or usability point of view.
 
-A geographical reason could be: “Does it make sense to divide a single rather small landmass into even smaller parts just to respect political borders or would a simulator pilot rather load either all or no mods for the complete landmass in question?” / “Does it make sense to have a large landmass with a large amount of mods to would it be useful to divide it In an easily recognizable way?” / “Does it make sense to have a country labeled by its full official name even if it distorts the UI or is it more reasonable to use a short name anyone understands?” As you can see, these questions are in no way politically motivated.
+Such a reason could be: “Does it make sense to divide a single rather small landmass into even smaller parts just to respect political borders or would a simulator pilot rather load either all or no mods for the complete landmass in question?” / “Does it make sense to have a large landmass with a large amount of mods or would it be useful to divide it in an easily recognizable way?” / “Does it make sense to have a country labeled by its full official name even if it distorts the UI or is it more reasonable to use a short name anyone understands?” As you can see, these questions are in no way politically motivated.
 
 Most importantly and most prominently, we have merged the two independent countries of Saint Martin (MAF) and Sint Maarten (SXM) into a single country definition ```Country.MAF=Saint Martin```. These are the two parts of an island of 34 sq mi in the Caribbean Sea, about equally divided into a French and a Dutch side. Clearly, it doesn’t seem to make sense to show them separately in the UI.
 
@@ -116,8 +120,9 @@ With that out of the way, let’s see some other examples:
 * ```Country.IRL=Ireland / N. Ireland```: for the entire island, not just the Republic of Ireland
 * ```Country.IRN=Iran```: official prefix “Islamic Republic of” omitted
 * (```Country.VAT=Holy See```: removed because really Vatican City is part of Rome, Italy)
+* ...and several more.
 
-As written above, you are free to completely change these definitions to your liking.
+As written above, you are free to completely change any of these definitions to your liking.
 
 However, for a possible future online central repository, we plan to restrict interpretation to these canonical definitions.
 
@@ -230,7 +235,7 @@ Known limitations include:
   * config split into I18N labels (typically interchangeable between users) and local config (typically specific to a user’s setup and preferences);
   * added pre-defined names/labels for all countries and US states;
   * automated country / city consistency check;
-  * added error recognition for illegal continents and duplicate mods;
+  * added error recognition for duplicate mods and illegal continents;
   * added line number information to all mods.txt line parsing errors;
   * general UI error handling improved.
 * 0.5:
@@ -257,7 +262,7 @@ Known limitations include:
   * Move your ```ModType.XY```, ```AircraftType```, ```AircraftType.XY```, ```Continent.XY```, and ```Country.XY``` definitions from config.properties into labels.properties or simply remove them to use the implicit pre-defined labels (recommended).
   * Make sure that your ```Country.XY``` definitions in labels.properties as well as your country references in mods.txt use the new ```Country.XYZ``` 3-letter abbreviation of country codes if you want to use the official definition (recommended). ```Country.XY``` 2-letter abbreviations are now designated for US states only.
   * Note that moreover several former default “XY” definitions have changed. Most notably: ```Continent.OC``` (formerly Continent.OZ), ```Country.AK``` (formerly ```Country.AL```), ```Country.DE``` (used to abbreviate “Germany”, now abbreviates “Delaware”).
-  * Note that a mods.txt entry with an illegal continent or a duplicate mod name will now explicitly raise an error.
+  * Note that a mods.txt entry with a duplicate mod name or an illegal continent will now explicitly raise an error.
   * Note that moreover if in mods.txt there is a conflict between linking a city/country to a continent or a city to a country, an error will be raised.
 * 0.4 -> 0.5:
   * Note that a mods.txt entry with an illegal / empty mod name or mod type will now explicitly raise an error.

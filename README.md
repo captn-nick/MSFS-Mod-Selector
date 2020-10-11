@@ -133,10 +133,9 @@ In order to add a mod under Mod Selector management, you must:
 
 A mods.txt file entry consists of a
 
-```Type\tContinent\tCountry\tName\tCityOrIcaoOrAircrafttype ## Description\tAuthor\tWebsite```
+<code>Type&#9;Continent&emsp;Country&emsp;Name&emsp;CityOrIcaoOrAircrafttype ## Description&emsp;Author&emsp;Website</code>
 
 entry whereas
-* ```\t```: a single tab character. All elements are _separated by tabs_.
 * ```Type```: abbreviation of one of the supported types. Supported types are:
   * ```AP```: airport
   * ```LM```: individual landmarks
@@ -158,15 +157,17 @@ entry whereas
 * ```Author```: the mod author’s name.
 * ```Website```: the website the mod can be downloaded from. Only https://flightsim.to sub-pages are supported.
 
+**Note: All elements are _separated by tabs spaces_.** (Note 2: when copying examples from this README into a notepad editor, you may get weird characters. Make sure to replace them with actual tab spaces! - or copy the examples of an actual example .txt file, see below.)
+
 Examples (note: this project is not affiliated with these mods in any way):
-* ```AP\tEU\tUK\tairport-eght-tresco-superspud``` for https://flightsim.to/file/598/eght-tresco-isles-of-scilly-uk, an airport in the UK, Europe.
-* ```LM\tOZ\tNZ\taucklandharbourbridge\tAuckland ## Auckland Harbour Bridge\tspas3manhttps://flightsim.to/file/146/auckland-harbour-bridge``` for https://flightsim.to/file/146/auckland-harbour-bridge, the Harbour Bridge landmark in Auckland, New Zealand, Oceania.
-* ```LS\tUS\t\tdevilstower-wyoming ## Devil's Tower\tVFXSimmer\thttps://flightsim.to/file/186/devil-s-tower``` for https://flightsim.to/file/186/devil-s-tower, the Devil's Tower, a landscape feature in the US (here, as an example, I omitted the "country" part).
-* ```LI\t\t\tliveries-xcub``` for the X-Cub part of the Livreries mega pack, as featured on https://flightsim.to/.
+* <code>AP	EU	GBR	addparking_eglm	EGLM	##	EGLM White Waltham Airfield	frododo	https://flightsim.to/file/1058/white-waltham-airfield</code> for https://flightsim.to/file/1058/white-waltham-airfield, an airport in the UK, Europe.
+* <code>LM	EU	NLD	amsterdamtower	Amsterdam	##	Amsterdam Tower + Centraal Station	master414	https://flightsim.to/file/318/amsterdam-tower-centraal-station</code> for https://flightsim.to/file/318/amsterdam-tower-centraal-station, the Centraal Station landmark in Amsterdam, Netherlands, Europe.
+* <code>LS	US	WY	devilstower-wyoming	##	Devil's Tower	VFXSimmer	https://flightsim.to/file/186/devil-s-tower</code> for https://flightsim.to/file/186/devil-s-tower, the Devil's Tower, a landscape feature in the US (here, as an example, I omitted the "country" part).
 
-(Note to replace ```\t``` with a actual tab in these examples.)
+[You can find **a complete example mods.txt file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/mods.txt).
 
-[You can find an example of **a complete mods.txt file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/mods.txt).
+[You can find **a mods.txt file with 500+ flightsim.to mods** here](https://github.com/captn-nick/MSFS-Mod-Repository/blob/master/mods-db.txt). (This file, constantly updated, will be used as a database for future Mod Selector versions.)
+
 
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.

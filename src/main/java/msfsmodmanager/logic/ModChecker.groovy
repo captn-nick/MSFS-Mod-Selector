@@ -20,18 +20,18 @@ class ModChecker {
     
     public static List<String> findUnregisteredMods(List<File> allMods) {
         return allMods.findAll {
-            !(it.name in Mods.mods*.name)
+            !(it.name in Mods.instance.mods*.name)
         }*.name
     }
     
     public static List<String> findUninstalledMods() {
-        return Mods.mods.findAll {
+        return Mods.instance.mods.findAll {
             !(new File(it.file.path).exists())
         }*.name
     }
     
     public static List<Mod> findCorruptedMods() {
-        return Mods.mods.findAll {
+        return Mods.instance.mods.findAll {
             !(new File(it.file.path + /\manifest.json/).exists())
         }
     }

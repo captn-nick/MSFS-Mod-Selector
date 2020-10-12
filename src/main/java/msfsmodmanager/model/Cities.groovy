@@ -22,7 +22,7 @@ class Cities {
     public static loadCities() {
         Map<String, Integer> numberOfMods = [:].withDefault { 0 }
         
-        Mods.mods.each {
+        Mods.instance.mods.each {
             if (it.city) {
                 numberOfMods[it.city] = numberOfMods[it.city] + 1
                 
@@ -54,38 +54,6 @@ class Cities {
     
     private static boolean showCitiesFor(int occurrences) {
         return occurrences >= (Config.getString("Cities.minMods") as int)
-    }
-    
-    public static void checkCityCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
-        if (!mod.city) {
-            return
-        }
-        
-        if (!FirstDefinition.COUNTRY_BY_CITY[mod.city]) {
-            FirstDefinition.COUNTRY_BY_CITY[mod.city] = new FirstDefinition(line, lineNo, mod)
-        }
-        else {
-            FirstDefinition firstDefinition = FirstDefinition.COUNTRY_BY_CITY[mod.city]
-            if (firstDefinition.mod.country != mod.country) {
-                throw new ModsParseException.ConflictingDataForLineParseException("country", firstDefinition, line, lineNo)
-            }
-        }
-    }
-    
-    public static void checkCityContinentDefinitionConsistency(String line, int lineNo, Mod mod) {
-        if (!mod.city) {
-            return
-        }
-        
-        if (!FirstDefinition.CONTINENT_BY_CITY[mod.city]) {
-            FirstDefinition.CONTINENT_BY_CITY[mod.city] = new FirstDefinition(line, lineNo, mod)
-        }
-        else {
-            FirstDefinition firstDefinition = FirstDefinition.CONTINENT_BY_CITY[mod.city]
-            if (firstDefinition.mod.continent != mod.continent) {
-                throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
-            }
-        }
     }
 }
 

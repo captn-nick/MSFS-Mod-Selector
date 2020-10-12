@@ -45,6 +45,10 @@ class Continent {
         }
     }
     
+    public String toTxt() {
+        return name
+    }
+    
     public static void loadContinents() {
         BY_NAME.each { k, v ->
             v.setCountries(Config.getString("Continent.${k}.Countries"))
@@ -54,22 +58,6 @@ class Continent {
     public static boolean belongsToAnyContinent(String country) {
         return BY_NAME.any { k, v ->
             country in v.countries
-        }
-    }
-    
-    public static void checkCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
-        if (!mod.country) {
-            return
-        }
-        
-        if (!FirstDefinition.CONTINENT_BY_COUNTRY[mod.country]) {
-            FirstDefinition.CONTINENT_BY_COUNTRY[mod.country] = new FirstDefinition(line, lineNo, mod)
-        }
-        else {
-            FirstDefinition firstDefinition = FirstDefinition.CONTINENT_BY_COUNTRY[mod.country]
-            if (firstDefinition.mod.continent != mod.continent) {
-                throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
-            }
         }
     }
     

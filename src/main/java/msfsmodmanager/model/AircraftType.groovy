@@ -13,6 +13,10 @@ enum AircraftType {
     
     String abbr
     
+    public String toTxt() {
+        return abbr
+    }
+    
     public static AircraftType parse(String abbr) {
         return values().find { it.abbr == abbr }
     }

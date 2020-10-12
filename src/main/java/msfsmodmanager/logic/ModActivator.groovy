@@ -7,11 +7,11 @@ import msfsmodmanager.state.*
 @CompileStatic
 class ModActivator {
     public static void activateMods(Selection selection) {
-        List<Mod> activeMods = Mods.mods.findAll { mod ->
+        List<Mod> activeMods = Mods.instance.mods.findAll { mod ->
             selection.activates(mod)
         }
         
-        List<Mod> inactiveMods = Mods.mods - activeMods
+        List<Mod> inactiveMods = Mods.instance.mods - activeMods
         
         activeMods.each { mod ->
             FileSystem.activate(mod)
@@ -25,12 +25,12 @@ class ModActivator {
         
         println "Mods activated:"
         println activeMods.join("\n")
-        println activeMods.size() + " of " + Mods.mods.size() + " in total."
+        println activeMods.size() + " of " + Mods.instance.mods.size() + " in total."
         println()
     }
     
     public static void deactivateAllMods() {
-        Mods.mods.each { mod ->
+        Mods.instance.mods.each { mod ->
             FileSystem.deactivate(mod)
             mod.active = false
         }

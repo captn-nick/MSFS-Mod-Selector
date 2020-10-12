@@ -13,6 +13,8 @@ class ErrorHandler {
     public static enum ErrorType {
         DEFAULT,
         DUPLICATE_MODS,
+        UNREGISTERED_MODS,
+        UNREGISTERED_MODS_IN_DB,
     }
     
     public static void handleGlobalError(Exception ex) {

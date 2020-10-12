@@ -31,6 +31,34 @@ class Mod {
         return new File((active ? FileSystem.MOD_DIR : FileSystem.TEMP_DIR) + $/\/$ + name)
     }
     
+    public String toTxt() {
+        return """${type.toTxt()}\t${continent ? continent.toTxt() : ''}\t$country\t$name\t${cityOrIcaoOrAircraftTypeToTxt()}${commentsToTxt()}"""
+    }
+    
+    private String cityOrIcaoOrAircraftTypeToTxt() {
+        String ret = ""
+        if (city) ret = city
+        else if (icao) ret = icao
+        else if (aircraftType) ret = aircraftType.toTxt()
+        
+        if (ret) {
+            ret += "\t"
+        }
+        return ret
+    }
+    
+    private String commentsToTxt() {
+        String ret = ""
+        if (description) ret += description + "\t"
+        if (author) ret += author + "\t"
+        if (url) ret += url
+        
+        if (ret) {
+            ret = "##\t" + ret
+        }
+        return ret
+    }
+    
     public static Builder name(String name) {
         return new Builder(name)
     }
@@ -79,7 +107,7 @@ class Mod {
     }
     
     private static boolean isIcao(String candidate) {
-        return candidate ==~ /[A-Z0-9]{3,4}/
+        return candidate ==~ /([A-Z0-9]{3,6})|(LF[0-9]{4})/ //2nd part: local French ICAO codes
     }
 }
 

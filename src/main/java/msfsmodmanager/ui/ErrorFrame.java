@@ -12,6 +12,7 @@ import msfsmodmanager.Main;
 import msfsmodmanager.logic.ErrorHandler;
 import msfsmodmanager.util.Browser;
 import msfsmodmanager.logic.ModDeleter;
+import msfsmodmanager.state.ModsDb;
 
 import static msfsmodmanager.logic.ErrorHandler.ErrorType;
 
@@ -22,6 +23,8 @@ public class ErrorFrame extends javax.swing.JFrame {
     private String details;
     private String stackTrace;
     private ErrorType errorType;
+    
+    private final ErrorFrameHandler handler = new ErrorFrameHandler(this);
     
     static {
         Map<TextAttribute, Integer> fontAttributes = new HashMap<TextAttribute, Integer>();
@@ -72,9 +75,10 @@ public class ErrorFrame extends javax.swing.JFrame {
         topPanel = new javax.swing.JPanel();
         messageLabel = new javax.swing.JLabel();
         detailsScrollPane = new javax.swing.JScrollPane();
-        detailsTextArea = new javax.swing.JTextArea();
         bottomPanel = new javax.swing.JPanel();
         duplicatesDeleteButton = new javax.swing.JButton();
+        updateModDbButton = new javax.swing.JButton();
+        autoAddModsButton = new javax.swing.JButton();
         quitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -163,6 +167,27 @@ public class ErrorFrame extends javax.swing.JFrame {
             duplicatesDeleteButton.setVisible(false);
         }
 
+        updateModDbButton.setText("Search for new mod definitions online (Update mod DB)");
+        updateModDbButton.setToolTipText(ModsDb.instance.isUpdatable() ? null : "Can be updated every 10 minutes only.");
+        updateModDbButton.setEnabled(ModsDb.instance.isUpdatable());
+        updateModDbButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateModDbButtonActionPerformed(evt);
+            }
+        });
+        bottomPanel.add(updateModDbButton);
+
+        autoAddModsButton.setText("Auto-add these mod definitions found online");
+        autoAddModsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                autoAddModsButtonActionPerformed(evt);
+            }
+        });
+        bottomPanel.add(autoAddModsButton);
+        if (errorType != ErrorType.UNREGISTERED_MODS_IN_DB) {
+            autoAddModsButton.setVisible(false);
+        }
+
         quitButton.setText("Quit");
         quitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -209,6 +234,27 @@ public class ErrorFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_duplicatesDeleteButtonActionPerformed
 
+    private void autoAddModsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAddModsButtonActionPerformed
+        try {
+            handler.autoAddMods();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
+    }//GEN-LAST:event_autoAddModsButtonActionPerformed
+
+    private void updateModDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateModDbButtonActionPerformed
+        try {
+            ModsDb.instance.update();
+        
+            setVisible(false);
+            Main.restart();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
+    }//GEN-LAST:event_updateModDbButtonActionPerformed
+
     public static void show(String title, String message, String details, String stackTrace, ErrorType errorType) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -242,9 +288,10 @@ public class ErrorFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton autoAddModsButton;
     private javax.swing.JPanel bottomPanel;
     private javax.swing.JScrollPane detailsScrollPane;
-    private javax.swing.JTextArea detailsTextArea;
+    public final javax.swing.JTextArea detailsTextArea = new javax.swing.JTextArea();
     private javax.swing.JButton duplicatesDeleteButton;
     private javax.swing.JLabel messageLabel;
     private javax.swing.JButton quitButton;
@@ -258,5 +305,6 @@ public class ErrorFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane stacktraceScrollPane;
     private javax.swing.JTextArea stacktraceTextArea;
     private javax.swing.JPanel topPanel;
+    private javax.swing.JButton updateModDbButton;
     // End of variables declaration//GEN-END:variables
 }

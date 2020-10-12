@@ -17,6 +17,7 @@ class FileSystem {
         TEMP_DIR = Config.getString("path.temp")
         
         if (MOD_DIR == "") {
+            Main.FIRST_START = true
             Config.setString("path.community", getJarPath().absolutePath + /\Community/)
             MOD_DIR = Config.getString("path.community")
         }
@@ -31,7 +32,8 @@ class FileSystem {
             tempDir.mkdir()
         }
         
-        Mods.MOD_INFO_FILE = new File(getJarPath().absolutePath + /\mods.txt/)
+        Mods.instance.modInfoFile = new File(getJarPath().absolutePath + /\mods.txt/)
+        ModsDb.instance.modInfoFile = new File(getJarPath().absolutePath + /\mod-repository\mods-db.txt/)
     }
     
     public static File getJarPath() {

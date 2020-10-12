@@ -6,10 +6,14 @@ import msfsmodmanager.logic.ErrorHandler
 import msfsmodmanager.logic.ModChecker
 import msfsmodmanager.model.*
 import msfsmodmanager.state.*
+import msfsmodmanager.ui.Dialogs
 import msfsmodmanager.ui.MainFrame
+import msfsmodmanager.util.WebReader
 
 @CompileStatic
 class Main {
+    public static boolean FIRST_START = false
+    
     public static void main(String[] args) {
         try {
             start(args)
@@ -31,15 +35,27 @@ class Main {
         if (init()) {
             MainFrame.main()
         }
+        
+        FIRST_START = false
     }
     
     public static boolean init() {
         FileSystem.init()
-        Mods.loadRegisteredMods()
+        
+        if (FIRST_START) {
+            if (Dialogs.updateModsDb()) {
+                ModsDb.instance.update()
+                FIRST_START = false
+            }
+        }
+        
+        Mods.instance.loadRegisteredMods()
+        ModsDb.instance.loadRegisteredMods()
+        
         Continent.loadContinents()
         Cities.loadCities()
         
-        List<File> allMods = Mods.findAllMods()
+        List<File> allMods = Mods.instance.findAllMods()
         boolean ret = (
             checkUnregisteredAndCorruptedMods(allMods) &&
             checkDuplicatedMods(allMods) &&
@@ -78,11 +94,15 @@ class Main {
     
     private static boolean checkUnregisteredMods(List<File> allMods) {
         List<String> modNames = ModChecker.findUnregisteredMods(allMods)
+        ModsDb.DbInformationFound informationFromDb = ModsDb.instance.replaceWithDbInformation(modNames)
+        
         if (!modNames.empty) {
             return ErrorHandler.error(
                 "Error.030",
                 "Found unregistered mods:",
-                modNames.join("\n")
+                informationFromDb.lines.join("\n"),
+                null,
+                informationFromDb.foundAny ? ErrorHandler.ErrorType.UNREGISTERED_MODS_IN_DB : ErrorHandler.ErrorType.UNREGISTERED_MODS
             )
         }
         return true

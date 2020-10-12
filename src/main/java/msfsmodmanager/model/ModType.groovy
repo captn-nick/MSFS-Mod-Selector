@@ -28,11 +28,11 @@ enum ModType {
     
     String abbr
     
+    public String toTxt() {
+        return abbr
+    }
+    
     public static ModType parse(String abbr) {
-        // for backwards compatibility with v. 0.3 only
-        if (abbr == "LI") {
-            return LIVRERY
-        }
         return values().find { it.abbr == abbr }
     }
 }

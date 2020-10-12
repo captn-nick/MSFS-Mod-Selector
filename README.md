@@ -1,6 +1,6 @@
 # MSFS-Mod-Selector
 
-<img align="right" src="documentation/screenshot.png"/>
+<img align="right" src="documentation/screenshot.png" width="50%" height="50%"/>
 
 The MSFS mod selector solves a common problem in **Microsoft Flight Simulator 2020 (MSFS)**: even though only a few weeks after release, there are hundreds of high-quality **community-created mods** to enhance MSFS experience even further, installing a large number of them considerably slows down MSFS startup time to an unbearable point.
 
@@ -144,6 +144,8 @@ In order to add a mod under Mod Selector management, you must:
 * add an entry to the mods.txt file, or use Mod Selector’s auto-registry function through the online mod database.
 
 ### Using Mod Selector’s online mod database
+![Adding a mod](/documentation/screenshot2.png)
+
 Mods can be auto-registered by Mod Selector if found in the central mods DB.
 
 First, start up Mod Selector. If it finds a mod that is not registered in mods.txt yet, the “Error.030” window will pop up.

@@ -9,36 +9,46 @@ A simple manual solution is to manually copy only the mods you want to use at on
 The Mod Selector assists you in this by **automating the selection process**: it allows you to easily group mods by type and (for world enhancements which would be most mods) by continent, country, and even by city as well as by aircraft type (for aircraft mods).
 
 Here’s how this works:
+* Start up the Mod Selector before starting MSFS.
 * You must register each mod once with the Mod Selector.
-* Then, start up the Mod Selector before starting MSFS.
+  * If a mod is already in Mod Selector’s online mod database, it will register automatically.
 * Simply select all the mod categories you want to activate.
 * The Mod Selector will automatically copy the relevant mods into your Community folder / move away all unwanted mods into a temp folder.
 * Then, start MSFS and enjoy a significantly decreased startup time.
 
+## New and noteworthy!
+
+**Starting with version 0.7, Mod Selector now builds its own [open-source online mod meta-information database](https://github.com/captn-nick/MSFS-Mod-Repository) everyone can contribute to!**
+
+**Mod Selector now auto-discovers meta-information already present in the database.**
+
+A more comfortable UI for adding mods will follow soon. Stay tuned!
+
 ## Usage warning
-This program is very early beta. USE AT YOUR OWN RISK!
+This program is still early beta. USE AT YOUR OWN RISK!
 It is highly recommended that you create a backup of your mods (MSFS Community folder) before using this program.
 
 **Until V. 1.0 is reached, please expect breaking changes with each version jump!**
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.7: Create a central online repository for mod lookup so individual users don’t have to create their own mods.txt themselves manually.
-* V. 0.8: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.8 Git integration for assisted upload of new mods.txt entries into the central repository.
 * V. 0.9: Intelligent wizard for adding mods to mods.txt.
-* V. 0.10: Local / online individual mod search by keywords.
+* V. 0.10: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.11: Local / online individual mod search by keywords.
 
 ## Prerequisites
 Mod Selector requires Java to run.
 
 ## Download
-Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.6/MsfsModSelector.0.6.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
+Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.7/MsfsModSelector.0.7.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
 The program consists of 3 components:
 * **MsfsModSelector.jar**: the program file.
 * **mods.txt**: a text file containing information about all the mods managed by the Mod selector.
 * **config.properties**: a text file containing all configurations for the Mod selector.
+* **mod-repository\mods.db.txt**: a text file containing information about all the mods known to Mod Selector, whether you possess them or not. You can regularly update this file from a central repository on the internet to get the newest mod definitions.
 
 ## Setup
 No setup is required.
@@ -55,6 +65,8 @@ Make sure that the directory structure is correct:
   * mods.txt
   * Community/
   * _Temp/_
+  * mod-repository/
+    * mods-db.txt
   * (other folders of MSFS)
 
 Files / folders in _italics_ are options, see below.
@@ -129,8 +141,27 @@ However, for a possible future online central repository, we plan to restrict in
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
 * place the mod folder in the Community or Temp directory
-* add an entry to the **mods.txt** file
+* add an entry to the mods.txt file, or use Mod Selector’s auto-registry function through the online mod database.
 
+### Using Mod Selector’s online mod database
+Mods can be auto-registered by Mod Selector if found in the central mods DB.
+
+First, start up Mod Selector. If it finds a mod that is not registered in mods.txt yet, the “Error.030” window will pop up.
+
+Mod Selector will try to find registry information about all unknown mods in your central mods DB which contains information about all MSFS mods.
+
+If it can’t find information about a particular mod, try updating your mods DB by pressing the “Update…” button. Note that Mod Selector does not directly search for information online, but rather, updates its mods DB with information from the internet and then uses it as a local source. That’s why it’s important to update your local mods DB regularly. Think of it as your virus scanner’s virus definition database.
+
+For all mods found in the DB, Mod Selector will show the full information found for each mod. You can then:
+* Modify the information for any line
+* Delete any line
+* Leave any line as is
+
+and press the “Auto-add” button to add registration information for these (modified) lines to mods.txt.
+
+For mods unknown to the mods DB, only the mod line will be shown. You have to add these mods manually to mods.txt.
+
+### Manually adding a mod
 A mods.txt file entry consists of a
 
 <code>Type&#9;Continent&emsp;Country&emsp;Name&emsp;CityOrIcaoOrAircrafttype ## Description&emsp;Author&emsp;Website</code>
@@ -166,8 +197,7 @@ Examples (note: this project is not affiliated with these mods in any way):
 
 [You can find **a complete example mods.txt file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/mods.txt).
 
-[You can find **a mods.txt file with 500+ flightsim.to mods** here](https://github.com/captn-nick/MSFS-Mod-Repository/blob/master/mods-db.txt). (This file, constantly updated, will be used as a database for future Mod Selector versions.)
-
+[You can find **a mods.txt file with 500+ flightsim.to mods** here](https://github.com/captn-nick/MSFS-Mod-Repository/blob/master/mods-db.txt). (This is the database used by Mod Selector for mod registry information lookup.)
 
 ## Start and usage
 * Start the Mod Selector by double-clicking the program file or via the command line, see below.
@@ -232,6 +262,10 @@ Known limitations include:
 * And probably a few more improvements which would be “nice to have”…
 
 ## Version history
+* 0.7:
+  * added a mod meta-information database which can be updated from the internet;
+  * for newly-added mods, meta-information is auto-collected from the database and presented to the user with the option to automatically add mods information to mods.txt;
+  * support for 3-5-character ICAO codes / French “Altisurface” style ICAO codes.
 * 0.6:
   * config split into I18N labels (typically interchangeable between users) and local config (typically specific to a user’s setup and preferences);
   * added pre-defined names/labels for all countries and US states;
@@ -259,6 +293,8 @@ Known limitations include:
 * 0.1: Initial release
 
 ## Upgrade guide
+* 0.6 -> 0.7:
+  * For livrery mods, change the mod type id ```ModType.LI``` to ```ModType.AL``` for your mods.txt entries.
 * 0.5 -> 0.6:
   * Move your ```ModType.XY```, ```AircraftType```, ```AircraftType.XY```, ```Continent.XY```, and ```Country.XY``` definitions from config.properties into labels.properties or simply remove them to use the implicit pre-defined labels (recommended).
   * Make sure that your ```Country.XY``` definitions in labels.properties as well as your country references in mods.txt use the new ```Country.XYZ``` 3-letter abbreviation of country codes if you want to use the official definition (recommended). ```Country.XY``` 2-letter abbreviations are now designated for US states only.

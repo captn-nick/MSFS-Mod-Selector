@@ -18,7 +18,7 @@ Here’s how this works:
 
 ## New and noteworthy!
 
-**Starting with version 0.7, Mod Selector now builds its own [open-source online mod meta-information database](https://github.com/captn-nick/MSFS-Mod-Repository) everyone can contribute to!**
+**Starting with version 0.7, Mod Selector builds its own [open-source online mod meta-information database](https://github.com/captn-nick/MSFS-Mod-Repository) everyone can contribute to!**
 
 **Mod Selector now auto-discovers meta-information already present in the database.**
 
@@ -44,7 +44,7 @@ Mod Selector requires Java to run.
 Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.8/MsfsModSelector.0.8.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
-The program consists of 3 components:
+The program consists of 4 components:
 * **MsfsModSelector.jar**: the program file.
 * **mods.txt**: a text file containing information about all the mods managed by the Mod selector.
 * **config.properties**: a text file containing all configurations for the Mod selector.
@@ -85,6 +85,7 @@ entry.
 The following keys are of note:
 * ```path.community```: the full path of the Community mod directory
 * ```path.temp```: the full path of the temporary mod directory. Disabled mods will be stored here.
+* ```ModsDb.updateWithGit```: set to =true to use your locally installed Git client to update (pull) the central mod repository instead of downloading the file via HTTP. See “Contributing to Mod Selector’s online mod database” below.
 * ```ModType.defaultSelection```: defines which mod types are selected by default.
 * ```Continent.XY.Countries```: defines which countries to show in the UI for individual selection and in which order for continent XY.
 * ```Country.XY.showCities```: set to ```=false``` to not show any individual cities for this particular country in the UI. Defaults to ```=true```.
@@ -139,23 +140,23 @@ As written above, you are free to completely change any of these definitions to 
 However, for uploading your own mod definition to the online central repository, contributions are restricted to these canonical definitions.
 
 ## Concerning continents: Another explicitly non-political statement
-Similar to how we do with countries, we came up with our own definition of what are the available continents and what countries are part of them. They are of course based on actual geography, but also take aspects of FS-geography and usability into account.
+Similar to how we do with countries, we came up with our own definition of what are the available continents and what countries are part of them. They are of course based on actual geography, but also take aspects of Flight Simulator-oriented geography and usability into account.
 
 ![Canonical continent definitions](/documentation/Continents.png)
 
-* Europe, Asia, Africa, and South America generally correspond to their usual definition.
-* The US and Canada are their own continent simply because for the US, we want to group mods on two levels by state and city which seems to make sense for such a big and “moddable” country. For simplicity reasons, we added Canada as its own country to that “pseudo-continent” as well (otherwise it would stand alone in a separate “North America” continent).
-* Middle America contains the Central America mainland countries as well as all Caribbean island countries, except for the few very close to the coast of South America.
-* Oceania not only contains Australia and the actual Pacific Oceania region, but also very remote islands across all three oceans.
-* Arctica / Antarctica contains the land around the Earth’s poles. 
+* **Europe, Asia, Africa, and South America** generally correspond to their usual definition.
+* The **US and Canada** are their own continent simply because for the US, we want to group mods on two levels by state and city which seems to make sense for such a big and “moddable” country. For simplicity reasons, we added Canada as its own country to that “pseudo-continent” as well (otherwise it would stand alone in a separate “North America” continent).
+* **Middle America** contains the Central America mainland countries as well as all Caribbean island countries, except for the few very close to the coast of South America.
+* **Oceania** not only contains Australia and the actual Pacific Oceania region, but also very remote islands across all three oceans.
+* **Arctica / Antarctica** contains the land around the Earth’s poles. 
 The following are general rules of thumb:
-* Island countries belong to nearby continents; remote island countries belong to the generic Oceania continent. Some notable examples of links between countries and their respective continent:
+* **Island countries** belong to nearby continents; remote island countries belong to the generic Oceania continent. Some notable examples of links between countries and their respective continent:
   * All Caribbean countries belong to Middle America, but Aruba, Curaçao, and Trinidad and Tobago belong to South America.
-  * Svalbard and Jan Mayen belong to Arctica / Antarctica, but Island belongs to Europe.
+  * Svalbard and Jan Mayen belong to Arctica / Antarctica, but Iceland belongs to Europe.
   * Mauritius belongs to Africa, but the Seychelles belong to Oceania.
   * Sri Lanka belongs to Asia, but the Maldives belong to Oceania.
   * The Solomon Islands belong to Asia, but Vanuatu and Nauru belong to Oceania.
-* Dependent countries / oversea departments belong to their respective mother country and thus to their continent.
+* **Dependent countries / oversea departments** belong to their respective mother country and thus to their continent.
 
 As written above, you are free to completely change country-continent links to your liking.
 

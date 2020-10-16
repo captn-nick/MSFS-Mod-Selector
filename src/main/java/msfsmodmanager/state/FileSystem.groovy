@@ -34,6 +34,8 @@ class FileSystem {
         
         Mods.instance.modInfoFile = new File(getJarPath().absolutePath + /\mods.txt/)
         ModsDb.instance.modInfoFile = new File(getJarPath().absolutePath + /\mod-repository\mods-db.txt/)
+        
+        ModsDb.UPDATE_WITH_GIT = Config.getString("ModsDb.updateWithGit") == "true"
     }
     
     public static File getJarPath() {

@@ -27,16 +27,6 @@ class I18N {
         bundle = ResourceBundle.getBundle(BASE_NAME, Locale.getDefault(), loader);
     }
     
-    private static String getStringOrNull(String key, ResourceBundle rb) {
-        try {
-            // see https://stackoverflow.com/a/6995374 (Java 8 issue)
-            return new String(rb.getString(key).getBytes("ISO-8859-1"), "UTF-8")
-        }
-        catch (MissingResourceException ex) {
-            return null
-        }
-    }
-    
     public static String getString(String key) {
         String ret = null
         
@@ -45,10 +35,24 @@ class I18N {
         }
         
         if (ret == null) {
-            ret = getStringOrNull(key, defaultBundle)
+            ret = getDefaultStringOrNull(key)
         }
         
         return ret != null ? ret : "??? $key ???"
+    }
+    
+    public static String getDefaultStringOrNull(String key) {
+        return getStringOrNull(key, defaultBundle)
+    }
+    
+    private static String getStringOrNull(String key, ResourceBundle rb) {
+        try {
+            // see https://stackoverflow.com/a/6995374 (Java 8 issue)
+            return new String(rb.getString(key).getBytes("ISO-8859-1"), "UTF-8")
+        }
+        catch (MissingResourceException ex) {
+            return null
+        }
     }
 }
 

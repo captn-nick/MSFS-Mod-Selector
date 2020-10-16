@@ -4,14 +4,20 @@ import groovy.time.TimeCategory
 import groovy.time.TimeDuration
 import groovy.transform.CompileStatic
 import msfsmodmanager.Main
+import msfsmodmanager.logic.ModsDbHandler
 import msfsmodmanager.model.Mod
 import msfsmodmanager.util.WebReader
 
 @CompileStatic
 class ModsDb extends Mods {
-    private static final String UPDATE_URL = "https://raw.githubusercontent.com/captn-nick/MSFS-Mod-Repository/master/mods-db.txt"
+    public static final String HTTP_UPDATE_URL = "https://raw.githubusercontent.com/captn-nick/MSFS-Mod-Repository/master/mods-db.txt"
+    public static boolean UPDATE_WITH_GIT
     
     public static final ModsDb instance = new ModsDb()
+    
+    public String getFileName() {
+        return "mod-repository\\mods-db.txt"
+    }
     
     public DbInformationFound replaceWithDbInformation(List<String> modNames) {
         DbInformationFound ret = new DbInformationFound()
@@ -47,10 +53,37 @@ class ModsDb extends Mods {
         return sinceModified >= new TimeDuration(0, 10, 0, 0)
     }
     
-    public void update() {
-        String text = WebReader.readUrl(UPDATE_URL)
+    public boolean update(Closure okButtonAction) {
+        boolean success = true
+        if (UPDATE_WITH_GIT) {
+            success = ModsDbHandler.updateWithGit(okButtonAction)
+        }
+        else {
+            ModsDbHandler.updateWithHttp()
+        }
         
-        modInfoFile.setText(text, "UTF-8")
+        return success
+    }
+    
+    public void addAllMods(Map<String, Mod> newMods) {
+        // reset here to not keep anything in memory
+        resetFirstDefinitions()
+        
+        mods.each { Mod mod ->
+            checkRepositoryConsistency(mod, mod.line, mod.lineNo)
+        }
+        
+        newMods.each { String name, Mod mod ->
+            mod.checkBasicCorrectness(Mods.instance.fileName)
+            mod.checkCanonicalCorrectness(Mods.instance.fileName)
+            checkRepositoryConsistency(mod, mod.line, mod.lineNo)
+        }
+        
+        modsByName.putAll(newMods)
+    }
+    
+    protected List<Mod> sortBeforeSaving(List<Mod> mods) {
+        return mods.sort { it.name.toLowerCase() }
     }
 }
 

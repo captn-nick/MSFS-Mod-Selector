@@ -7,22 +7,26 @@ import java.awt.font.TextAttribute;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import msfsmodmanager.Main;
 import msfsmodmanager.logic.ErrorHandler;
 import msfsmodmanager.util.Browser;
+import msfsmodmanager.util.SwingUtil;
 import msfsmodmanager.logic.ModDeleter;
 import msfsmodmanager.state.ModsDb;
-
 import static msfsmodmanager.logic.ErrorHandler.ErrorType;
 
-public class ErrorFrame extends javax.swing.JFrame {
+
+public class ErrorFrame extends javax.swing.JDialog {
     private static final Font LINK_FONT;
 
     private String message;
     private String details;
     private String stackTrace;
     private ErrorType errorType;
+    private boolean forceShutdown;
     
     private final ErrorFrameHandler handler = new ErrorFrameHandler(this);
     
@@ -35,18 +39,28 @@ public class ErrorFrame extends javax.swing.JFrame {
     /**
      * Creates new form ErrorFrame
      */
-    public ErrorFrame(String title, String message, String details, String stackTrace, ErrorType errorType) {
+    public ErrorFrame(String title, String message, String details, String stackTrace, ErrorType errorType, boolean forceShutdown) {
+        super((JFrame)null, true);
         setTitle("MSFS ModSelector: " + title);
         this.message = message;
         this.details = details;
         this.stackTrace = stackTrace;
         this.errorType = errorType;
+        this.forceShutdown = forceShutdown;
         
         initComponents();
+        setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(quitButton);
+        quitButton.requestFocus();
         
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                System.exit(1);
+                if (forceShutdown) {
+                    System.exit(1);
+                }
+                else {
+                    SwingUtil.closeWindow(ErrorFrame.this);
+                }
             }
         });
     }
@@ -81,7 +95,7 @@ public class ErrorFrame extends javax.swing.JFrame {
         autoAddModsButton = new javax.swing.JButton();
         quitButton = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(885, 487));
         getContentPane().setLayout(new java.awt.BorderLayout(0, 4));
 
@@ -176,6 +190,9 @@ public class ErrorFrame extends javax.swing.JFrame {
             }
         });
         bottomPanel.add(updateModDbButton);
+        if (errorType != ErrorType.UNREGISTERED_MODS) {
+            updateModDbButton.setVisible(false);
+        }
 
         autoAddModsButton.setText("Auto-add these mod definitions found online");
         autoAddModsButton.addActionListener(new java.awt.event.ActionListener() {
@@ -188,7 +205,7 @@ public class ErrorFrame extends javax.swing.JFrame {
             autoAddModsButton.setVisible(false);
         }
 
-        quitButton.setText("Quit");
+        quitButton.setText(forceShutdown ? "Quit" : "Close");
         quitButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 quitButtonActionPerformed(evt);
@@ -202,7 +219,17 @@ public class ErrorFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
-        System.exit(1);
+        try {
+            if (forceShutdown) {
+                System.exit(1);
+            }
+            else {
+                SwingUtil.closeWindow(this);
+            }
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex);
+        }
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void stacktraceInfoLabel4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel4MouseReleased
@@ -226,7 +253,7 @@ public class ErrorFrame extends javax.swing.JFrame {
     private void duplicatesDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicatesDeleteButtonActionPerformed
         try {
             ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
-            setVisible(false);
+            SwingUtil.closeWindow(this);
             Main.restart();
         }
         catch (Exception ex) {
@@ -245,17 +272,14 @@ public class ErrorFrame extends javax.swing.JFrame {
 
     private void updateModDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateModDbButtonActionPerformed
         try {
-            ModsDb.instance.update();
-        
-            setVisible(false);
-            Main.restart();
+            handler.updateModsDb();
         }
         catch (Exception ex) {
             ErrorHandler.handleGlobalError(ex);
         }
     }//GEN-LAST:event_updateModDbButtonActionPerformed
 
-    public static void show(String title, String message, String details, String stackTrace, ErrorType errorType) {
+    public static void show(String title, String message, String details, String stackTrace, ErrorType errorType, boolean forceShutdown) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -282,7 +306,7 @@ public class ErrorFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ErrorFrame(title, message, details, stackTrace, errorType).setVisible(true);
+                new ErrorFrame(title, message, details, stackTrace, errorType, forceShutdown).setVisible(true);
             }
         });
     }

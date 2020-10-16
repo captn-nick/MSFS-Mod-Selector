@@ -14,10 +14,14 @@ class Mods {
     protected Map<String, Mod> modsByName = [:]
     FirstDefinitions firstDefinitions
     
+    protected String getFileName() {
+        return "mods.txt"
+    }
+    
     public void loadRegisteredMods() {
         // reset here to not keep anything in memory
         modsByName.clear()
-        firstDefinitions = new FirstDefinitions()
+        resetFirstDefinitions()
         
         String text = modInfoFile.getText("UTF-8")
         /*
@@ -32,7 +36,7 @@ class Mods {
         addAllMods(text.split("\n") as List<String>)
     }
     
-    public Map<String, Mod> addAllMods(List<String> lines) {
+    public void addAllMods(List<String> lines) {
         modsByName.putAll(lines.findAll {
             it.trim()
         }.withIndex().collectEntries { String it, int i ->
@@ -43,26 +47,24 @@ class Mods {
                 mod = parseLine(it, i)
             }
             catch (Exception ex) {
-                throw new ModsParseException.LineParseException(it, i, ex)
+                throw new ModsParseException.LineParseException(fileName, it, i, ex)
             }
 
-            firstDefinitions.checkDuplicateModNames(it, i, mod)
-            firstDefinitions.checkCityCountryDefinitionConsistency(it, i, mod)
-            firstDefinitions.checkCountryDefinitionConsistency(it, i, mod)
-            firstDefinitions.checkCityContinentDefinitionConsistency(it, i, mod)
+            mod.checkBasicCorrectness(fileName)
+            checkRepositoryConsistency(mod, it, i)
 
             return [(mod.name): mod]
         })
     }
     
-    private static Mod parseLine(String it, int i) {
+    private Mod parseLine(String it, int i) {
         it = it.trim()
         String[] line = it.split("##", -1)
 
         List<String> basic = StringUtil.trimEnd(line[0]).split("\t", -1) as List
 
         String type = basic[0]
-        Mod.Builder builder = Mod.name(basic[3])
+        Mod.Builder builder = Mod.create(basic[3], it, i)
         .type(basic[0])
         .continent(basic[1])
         .country(basic[2])
@@ -79,18 +81,18 @@ class Mods {
 
         Mod mod = builder.mod()
 
-        if (!mod.name) {
-            throw new ModsParseException.MissingDataForLineParseException("mod name", it, i)
-        }
-        if (!mod.type) {
-            throw new ModsParseException.MissingDataForLineParseException("mod type", it, i)
-        }
-        if (basic[1] && !mod.continent) {
-            throw new ModsParseException.MissingDataForLineParseException("continent", it, i)
-        }
-        
-
         return mod
+    }
+    
+    protected void checkRepositoryConsistency(Mod mod, String line, int lineNo) {      
+        firstDefinitions.checkDuplicateModNames(line, lineNo, mod)
+        firstDefinitions.checkCityCountryDefinitionConsistency(line, lineNo, mod)
+        firstDefinitions.checkCountryDefinitionConsistency(line, lineNo, mod)
+        firstDefinitions.checkCityContinentDefinitionConsistency(line, lineNo, mod)
+    }
+    
+    public List<String> getModNames() {
+        return modsByName.keySet() as List
     }
     
     public List<Mod> getMods() {
@@ -109,13 +111,31 @@ class Mods {
         return ret
     }
     
+    public Map<String, Mod> getUserDefinedMods() {
+        List<String> keys = (getModNames() - ModsDb.instance.getModNames())
+        
+        return modsByName.subMap(keys)
+    }
+    
     public void saveToTxt() {
-        String text = mods*.toTxt().join("\n")
+        String text = sortBeforeSaving(mods)*.toTxt().join("\n")
         
         modInfoFile.setText(text, "UTF-8")
     }
     
-    protected static class FirstDefinitions {
+    protected List<Mod> sortBeforeSaving(List<Mod> mods) {
+        return mods
+    }
+    
+    /*
+     * For very unknown reasons, this gives a compile error if called like that in a child class.
+     * It works, however, when encapsulated in a method.
+     */
+    protected void resetFirstDefinitions() {
+        firstDefinitions = new FirstDefinitions()
+    }
+    
+    protected class FirstDefinitions {
         Map<String, FirstDefinition> modNames = [:]
         Map<String, FirstDefinition> continentByCountry = [:]
         Map<String, FirstDefinition> countryByCity = [:]
@@ -127,7 +147,7 @@ class Mods {
             }
             else {
                 FirstDefinition firstDefinition = modNames[mod.name]
-                throw new ModsParseException.DuplicateModNameForLineParseException(firstDefinition, line, lineNo)  
+                throw new ModsParseException.DuplicateModNameForLineParseException(Mods.this.fileName, firstDefinition, line, lineNo)  
             }
         }
         
@@ -142,7 +162,7 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = continentByCountry[mod.country]
                 if (firstDefinition.mod.continent != mod.continent) {
-                    throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
+                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "continent", firstDefinition, line, lineNo)
                 }
             }
         }
@@ -158,7 +178,7 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = countryByCity[mod.city]
                 if (firstDefinition.mod.country != mod.country) {
-                    throw new ModsParseException.ConflictingDataForLineParseException("country", firstDefinition, line, lineNo)
+                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "country", firstDefinition, line, lineNo)
                 }
             }
         }
@@ -174,7 +194,7 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = continentByCity[mod.city]
                 if (firstDefinition.mod.continent != mod.continent) {
-                    throw new ModsParseException.ConflictingDataForLineParseException("continent", firstDefinition, line, lineNo)
+                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "continent", firstDefinition, line, lineNo)
                 }
             }
         }

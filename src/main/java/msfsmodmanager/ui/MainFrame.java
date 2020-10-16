@@ -6,8 +6,8 @@ import msfsmodmanager.logic.ErrorHandler;
 
 public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel eu = new ContinentPanel(Continent.EU);
-    public final ContinentPanel us = new ContinentPanel(Continent.US);
-    public final ContinentPanel na = new ContinentPanel(Continent.NA);
+    public final ContinentPanel uc = new ContinentPanel(Continent.UC);
+    public final ContinentPanel ma = new ContinentPanel(Continent.MA);
     public final ContinentPanel sa = new ContinentPanel(Continent.SA);
     public final ContinentPanel as = new ContinentPanel(Continent.AS);
     public final ContinentPanel af = new ContinentPanel(Continent.AF);
@@ -24,6 +24,9 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(applyButton);
+        applyButton.requestFocus();
     }
 
     /**
@@ -37,15 +40,18 @@ public class MainFrame extends javax.swing.JFrame {
 
         typePanel = new javax.swing.JPanel();
         buttonPanel = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        rightButtonPanel = new javax.swing.JPanel();
+        deactivateAllButton = new javax.swing.JButton();
         applyButton = new javax.swing.JButton();
+        leftButtonPanel = new javax.swing.JPanel();
+        contributeToModsDbButton = new javax.swing.JButton();
         mainScrollPane = new javax.swing.JScrollPane();
         mainPanel = new javax.swing.JPanel();
         continentsPanel1 = new javax.swing.JPanel();
         continentsPanel1.add(eu);
         continentsPanel2 = new javax.swing.JPanel();
-        continentsPanel2.add(us);
-        continentsPanel2.add(na);
+        continentsPanel2.add(uc);
+        continentsPanel2.add(ma);
         continentsPanel2.add(sa);
         continentsPanel3 = new javax.swing.JPanel();
         continentsPanel3.add(as);
@@ -93,15 +99,17 @@ public class MainFrame extends javax.swing.JFrame {
 
         getContentPane().add(typePanel, java.awt.BorderLayout.NORTH);
 
-        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+        buttonPanel.setLayout(new java.awt.BorderLayout());
 
-        jButton1.setText("Deactivate all");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        rightButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+
+        deactivateAllButton.setText("Deactivate all");
+        deactivateAllButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                deactivateAllButtonActionPerformed(evt);
             }
         });
-        buttonPanel.add(jButton1);
+        rightButtonPanel.add(deactivateAllButton);
 
         applyButton.setText("Apply");
         applyButton.addActionListener(new java.awt.event.ActionListener() {
@@ -109,7 +117,22 @@ public class MainFrame extends javax.swing.JFrame {
                 applyButtonActionPerformed(evt);
             }
         });
-        buttonPanel.add(applyButton);
+        rightButtonPanel.add(applyButton);
+
+        buttonPanel.add(rightButtonPanel, java.awt.BorderLayout.EAST);
+
+        leftButtonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+
+        contributeToModsDbButton.setText("Contribute to mods DB");
+        contributeToModsDbButton.setToolTipText("Export the new mod definitions you have added in order to upload them to the central repository.");
+        contributeToModsDbButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                contributeToModsDbButtonActionPerformed(evt);
+            }
+        });
+        leftButtonPanel.add(contributeToModsDbButton);
+
+        buttonPanel.add(leftButtonPanel, java.awt.BorderLayout.WEST);
 
         getContentPane().add(buttonPanel, java.awt.BorderLayout.SOUTH);
 
@@ -143,14 +166,23 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_applyButtonActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void deactivateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deactivateAllButtonActionPerformed
         try {
             handler.deactivateAll();
         }
         catch (Exception ex) {
             ErrorHandler.handleGlobalError(ex);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_deactivateAllButtonActionPerformed
+
+    private void contributeToModsDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contributeToModsDbButtonActionPerformed
+        try {
+            handler.addUserDefinedModsToModsDb();
+        }
+        catch (Exception ex) {
+            ErrorHandler.handleGlobalError(ex, false);
+        }
+    }//GEN-LAST:event_contributeToModsDbButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -197,14 +229,17 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel continentsPanel2;
     private javax.swing.JPanel continentsPanel3;
     private javax.swing.JPanel continentsPanel4;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton contributeToModsDbButton;
+    private javax.swing.JButton deactivateAllButton;
     public final javax.swing.JCheckBox landmarkCheckBox = new javax.swing.JCheckBox();
     public final javax.swing.JCheckBox landscapeCheckBox = new javax.swing.JCheckBox();
     public final javax.swing.JCheckBox landscapeFixCheckBox = new javax.swing.JCheckBox();
+    private javax.swing.JPanel leftButtonPanel;
     public final javax.swing.JCheckBox livreryCheckBox = new javax.swing.JCheckBox();
     private javax.swing.JPanel mainPanel;
     private javax.swing.JScrollPane mainScrollPane;
     public final javax.swing.JCheckBox otherCheckBox = new javax.swing.JCheckBox();
+    private javax.swing.JPanel rightButtonPanel;
     private javax.swing.JPanel typePanel;
     // End of variables declaration//GEN-END:variables
 }

@@ -18,62 +18,39 @@ class ErrorHandler {
     }
     
     public static void handleGlobalError(Exception ex) {
-        switch (ex) {
-            case ModsParseException.DuplicateModNameForLineParseException:
-                ModsParseException.DuplicateModNameForLineParseException cdlex = (ModsParseException.DuplicateModNameForLineParseException)ex
-                error (
-                    "Error.110",
-                    cdlex.info,
-                    cdlex.line,
-                    null
-                )
-                
-            break
-            case ModsParseException.ConflictingDataForLineParseException:
-                ModsParseException.ConflictingDataForLineParseException cdlex = (ModsParseException.ConflictingDataForLineParseException)ex
-                error (
-                    "Error.111",
-                    cdlex.info,
-                    cdlex.line,
-                    null
-                )
-                
-            break
-            case ModsParseException.LineParseException:
-                ModsParseException.LineParseException lpex = (ModsParseException.LineParseException)ex
-                if (ex.cause in ModsParseException.MissingDataForLineParseException) {
-                    ModsParseException.MissingDataForLineParseException cause = (ModsParseException.MissingDataForLineParseException)lpex.cause
-                    error (
-                        "Error.101",
-                        cause.info,
-                        cause.line,
-                        StringUtil.toString(ex)
-                    )
-                }
-                else {
-                    error (
-                        "Error.100",
-                        lpex.info,
-                        lpex.line,
-                        StringUtil.toString(lpex)
-                    )
-                }
-
-            break
-            default:
-                error (
-                    "Error.001",
-                    "Unexpected error occurred.",
-                    null,
-                    StringUtil.toString(ex)
-                )
-            
-            break
-        }
-        
+        handleGlobalError(ex, true)
     }
     
-    public static boolean error(String title, String message, String details, String stackTrace=null, ErrorType errorType=ErrorType.DEFAULT) {
+    public static void handleGlobalError(Exception ex, boolean forceShutdown) {
+        if (ex in ModsParseException.LineParseException) {
+            ModsParseException.LineParseException lpex = (ModsParseException.LineParseException)ex
+            
+            error (
+                "Error.${lpex.errorNo}",
+                lpex.info,
+                lpex.line,
+                lpex.showStackTrace ? StringUtil.toString(lpex) : null,
+                forceShutdown
+            )
+        }
+        else {
+            error (
+                "Error.001",
+                "Unexpected error occurred.",
+                null,
+                StringUtil.toString(ex),
+                forceShutdown
+            )
+        }
+    }
+    
+    public static boolean error(String title, String message, String details, String stackTrace=null,
+        ErrorType errorType=ErrorType.DEFAULT) {
+        return error(title, message, details, stackTrace, errorType, true)
+    }
+    
+    public static boolean error(String title, String message, String details, String stackTrace=null,
+        ErrorType errorType=ErrorType.DEFAULT, boolean forceShutdown) {
         println title
         println "!!! " + message
         if (details) println details
@@ -84,10 +61,12 @@ with the following information. Make sure to read the README (https://github.com
             println stackTrace
         }
         if (showErrorsAsPopups) {
-            ErrorFrame.show(title, message, details, stackTrace, errorType)
+            ErrorFrame.show(title, message, details, stackTrace, errorType, forceShutdown)
         }
         else {
-            System.exit(1)
+            if (forceShutdown) {
+                System.exit(1)
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ package msfsmodmanager.ui
 import groovy.transform.CompileStatic
 import msfsmodmanager.Main
 
-import msfsmodmanager.logic.ModActivator
+import msfsmodmanager.logic.*
 import msfsmodmanager.model.*
 
 @CompileStatic
@@ -17,7 +17,7 @@ class MainFrameHandler {
     public void apply() {
         Main.init()
         
-        Selection selection = SelectableComps.getSelection([frame.eu, frame.us, frame.na, frame.sa, frame.as, frame.af, frame.oc, frame.aa, frame.of])
+        Selection selection = SelectableComps.getSelection([frame.eu, frame.uc, frame.ma, frame.sa, frame.as, frame.af, frame.oc, frame.aa, frame.of])
         selection.aircraftTypes = frame.aircraftPanel.selection
         
         if (frame.airportCheckBox.selected) selection.types << ModType.AIRPORT
@@ -36,6 +36,13 @@ class MainFrameHandler {
         Main.init()
         
         ModActivator.deactivateAllMods();
+    }
+    
+    public void addUserDefinedModsToModsDb() {
+        Main.init()
+        
+        ModsDbHandler.addUserDefinedModsToModsDb()
+        Dialogs.afterContributedToModsDb()
     }
 }
 

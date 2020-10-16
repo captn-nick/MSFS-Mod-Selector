@@ -8,13 +8,14 @@ import msfsmodmanager.model.*
 import msfsmodmanager.state.*
 import msfsmodmanager.ui.Dialogs
 import msfsmodmanager.ui.MainFrame
+import msfsmodmanager.util.CmdLine
 import msfsmodmanager.util.WebReader
 
 @CompileStatic
 class Main {
     public static boolean FIRST_START = false
     
-    public static void main(String[] args) {
+    public static void main(String[] args) {        
         try {
             start(args)
         }
@@ -44,8 +45,20 @@ class Main {
         
         if (FIRST_START) {
             if (Dialogs.updateModsDb()) {
-                ModsDb.instance.update()
                 FIRST_START = false
+                if (ModsDb.instance.update() {
+                        restart()
+                }) {
+                    if (!ModsDb.UPDATE_WITH_GIT) {
+                        Dialogs.updateModsDbSuccessful()
+                    }
+                    else {
+                        return // ModsDb.instance.update() will take control.
+                    }
+                }
+                else {
+                    return
+                }
             }
         }
         

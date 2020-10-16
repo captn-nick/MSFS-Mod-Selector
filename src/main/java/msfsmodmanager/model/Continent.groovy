@@ -3,12 +3,13 @@ package msfsmodmanager.model
 import groovy.transform.CompileStatic
 import msfsmodmanager.ex.ModsParseException
 import msfsmodmanager.state.Config
+import msfsmodmanager.ui.I18N
 
 @CompileStatic
 class Continent {
     public static Continent EU = new Continent("EU")
-    public static Continent US = new Continent("US")
-    public static Continent NA = new Continent("NA")
+    public static Continent UC = new Continent("UC")
+    public static Continent MA = new Continent("MA")
     public static Continent SA = new Continent("SA")
     public static Continent AF = new Continent("AF")
     public static Continent AS = new Continent("AS")
@@ -18,8 +19,8 @@ class Continent {
     
     public static Map<String, Continent> BY_NAME = [
         EU: EU,
-        US: US,
-        NA: NA,
+        UC: UC,
+        MA: MA,
         SA: SA,
         AF: AF,
         AS: AS,
@@ -28,11 +29,11 @@ class Continent {
         OF: OF,
     ]
     
-    public final String name
+    public final String abbr
     private List<String> countries = []
     
-    Continent(String name) {
-        this.name = name
+    Continent(String abbr) {
+        this.abbr = abbr
     }
     
     public List<String> getCountries() {
@@ -43,10 +44,6 @@ class Continent {
         if (countries) {
             this.countries = countries.split(", ") as List
         }
-    }
-    
-    public String toTxt() {
-        return name
     }
     
     public static void loadContinents() {
@@ -61,8 +58,16 @@ class Continent {
         }
     }
     
+    public static String getContinentFor(String country) {
+        return I18N.getDefaultStringOrNull("Country.${country}.Continent")
+    }
+    
+    public String toTxt() {
+        return abbr
+    }
+    
     public String toString() {
-        return name
+        return abbr
     }
 }
 

@@ -32,16 +32,16 @@ It is highly recommended that you create a backup of your mods (MSFS Community f
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.8 Git integration for assisted upload of new mods.txt entries into the central repository.
-* V. 0.9: Intelligent wizard for adding mods to mods.txt.
-* V. 0.10: Make continent sub-panel sizes adjustable; show mod selection feedback.
-* V. 0.11: Local / online individual mod search by keywords.
+* V. 0.9: Wizard for adding mods to mods.txt.
+* V. 0.10: Improve mods adding wizard with automatic online mod information lookup.
+* V. 0.11: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 0.12: Local / online individual mod search by keywords.
 
 ## Prerequisites
 Mod Selector requires Java to run.
 
 ## Download
-Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.7/MsfsModSelector.0.7.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
+Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.8/MsfsModSelector.0.8.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
 The program consists of 3 components:
@@ -94,7 +94,7 @@ Note:
 * For the paths, backslashes have to be doubled (```\\``` instead of ```\```).
 * You are free to define your own countries. As long as at least one mod is designated to this country (and defines a continent as well), Mod Selector will be able to link this country to its continent, i.e. a country does not have to be listed explicitly in any ```Continent.XY.Countries``` entry. To do so, add a new country definition to your labels file (see below) and, optionally, use it in a ```Continent.XY.Countries``` definition.
 * You are free to define your own cities simply by linking them to any mod (see below). For cities, no config is required. All cities explicitly linked to any mod will show up in the UI in alphabetical order.
-* The US are their own continent simply because that way we can group mods on two levels by state and city which seems to make sense.
+* •	The US and Canada are their own continent simply because for the US, we want to group mods on two levels by state and city which seems to make sense for such a big and “moddable” country. For simplicity reasons, we added Canada as its own country to that “pseudo-continent” as well (otherwise it would stand alone in a separate “North America” continent).
 
 ## Labels
 Mod Selector comes with pre-defined labels for mod types, continents, countries, and more. However, you can change those labels or add your own ones (e.g. to add available countries).
@@ -117,7 +117,7 @@ Note:
 
 [You can find an example of **a complete labels.properties file** here](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/external-test-resources/labels.properties).
 
-### An explicitly non-political statement
+### Concerning countries: An explicitly non-political statement
 The default country definition Mod Selector uses, as defined by its labels.properties file, is based on the [ISO 3166-1 alpha-3 country ISO codes for countries](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3#Current_codes) (3 characters) and the [ISO 3166-2:US codes for US states](https://en.wikipedia.org/wiki/ISO_3166-2:US#Current_codes) (2 characters).
 
 However, these have been slightly modified where it made sense from a geographical or usability point of view.
@@ -136,12 +136,48 @@ With that out of the way, let’s see some other examples:
 
 As written above, you are free to completely change any of these definitions to your liking.
 
-However, for a possible future online central repository, we plan to restrict interpretation to these canonical definitions.
+However, for uploading your own mod definition to the online central repository, contributions are restricted to these canonical definitions.
+
+## Concerning continents: Another explicitly non-political statement
+Similar to how we do with countries, we came up with our own definition of what are the available continents and what countries are part of them. They are of course based on actual geography, but also take aspects of FS-geography and usability into account.
+
+![Canonical continent definitions](/documentation/Continents.png)
+
+* Europe, Asia, Africa, and South America generally correspond to their usual definition.
+* The US and Canada are their own continent simply because for the US, we want to group mods on two levels by state and city which seems to make sense for such a big and “moddable” country. For simplicity reasons, we added Canada as its own country to that “pseudo-continent” as well (otherwise it would stand alone in a separate “North America” continent).
+* Middle America contains the Central America mainland countries as well as all Caribbean island countries, except for the few very close to the coast of South America.
+* Oceania not only contains Australia and the actual Pacific Oceania region, but also very remote islands across all three oceans.
+* Arctica / Antarctica contains the land around the Earth’s poles. 
+The following are general rules of thumb:
+* Island countries belong to nearby continents; remote island countries belong to the generic Oceania continent. Some notable examples of links between countries and their respective continent:
+  * All Caribbean countries belong to Middle America, but Aruba, Curaçao, and Trinidad and Tobago belong to South America.
+  * Svalbard and Jan Mayen belong to Arctica / Antarctica, but Island belongs to Europe.
+  * Mauritius belongs to Africa, but the Seychelles belong to Oceania.
+  * Sri Lanka belongs to Asia, but the Maldives belong to Oceania.
+  * The Solomon Islands belong to Asia, but Vanuatu and Nauru belong to Oceania.
+* Dependent countries / oversea departments belong to their respective mother country and thus to their continent.
+
+As written above, you are free to completely change country-continent links to your liking.
+
+However, for uploading your own mod definition to the online central repository, contributions are restricted to these canonical definitions.
+
+[Find the complete map of the world, divided into the canonical continents, here. (Note: This map ignores the “dependent country rule”.](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/documentation/Continents.png)
+
+[Find the complete list of all canonical country-to-continents links here (see the Country.XYZ.Continent entries).](https://github.com/captn-nick/MSFS-Mod-Selector/blob/master/src/main/resources/default_labels.properties)
 
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
 * place the mod folder in the Community or Temp directory
 * add an entry to the mods.txt file, or use Mod Selector’s auto-registry function through the online mod database.
+
+### Restrictions
+Note the following restrictions. When violated, they cause a warning / error, see below.
+* Mod name must not be empty.
+* Mod names must be unique across all mods.txt entries.
+* Mod type must be one of the supported mod type.
+* Continent must be one of the supported continents or empty.
+* Cities must be uniquely linked to a country and a continent across all mods.txt entries, i.e. a city must not be linked to one country/continent in one entry, and to another in another entry.
+* Countries must be uniquely linked to a continent across all mods.txt entries, i.e. a country must not be linked to one continent in one entry, and to another in another entry.
 
 ### Using Mod Selector’s online mod database
 ![Adding a mod](/documentation/screenshot2.png)
@@ -162,6 +198,20 @@ For all mods found in the DB, Mod Selector will show the full information found 
 and press the “Auto-add” button to add registration information for these (modified) lines to mods.txt.
 
 For mods unknown to the mods DB, only the mod line will be shown. You have to add these mods manually to mods.txt.
+
+### Contributing to Mod Selector’s online mod database
+If you decided to contribute your own mod definitions back to the central repository, first of all, thank you!
+
+Mod Selector uses a simple Git integration interface to allow you to download / upload mod definitions. Git is a tool used by software developers to work collaboratively on text / source code files. It is also used as the underlying mechanism of GitHub, the platform which hosts the Mod Selector source code. [Learn more about Git here](https://git-scm.com/). This chapter assumes you are familiar with Git. If you do not want to use Git to upload your mod definitions to the central repository, simply skip to the next chapter.
+
+In order to integrate Mode Selector with Git to use it to download / upload mod definitions, you must:
+* Install an external Git client.
+* Checkout Mod Selecor’s mod-repository subfolder (in the Packages folder) as a copy of the Git repository https://github.com/captn-nick/MSFS-Mod-Repository.
+* In your config.properties file, change the following property: ModsDb.updateWithGit=true.
+This latter property change will make sure that when clicking “Update mods DB”, rather than simply HTTP-downloading the latest mods-db.txt file content, Mod Selector will actually make a Git pull in its folder instead. This is done so to make sure both download and upload are managed by Git to prevent version conflicts.
+If you are in “Git mode”:
+* To download the newest mod definitions, click on the “Update mods DB” button. This simply does a Git pull. The concole output will be presented in a separate Window. If the pull command failed, please use your local Git client to solve the problem.
+* To upload your own mod definitions, click on “Contribute to mods DB” in the main window. This will add all your own mod-definitions to mods-db.txt, check them for consistency, and sort them. You then have to use your local Git client to actuall upload (push) that file to the remote repository (and file a pull request).
 
 ### Manually adding a mod
 A mods.txt file entry consists of a
@@ -256,6 +306,7 @@ For installing new mods:
 ## Known limitations
 This program is very early beta. I have created it as a very quick & dirty solution for my own personal use but eventually decided to release it publicly, even if of little use.
 Known limitations include:
+* First startup initializing may take some time.
 * No auto-discovery / assistance to add mods. All mods have to be added manually in the mods.txt file.
 * Mod Selector will not remember the last selection but always start up in the default selection.
 * Only limited possibilities to re-arrange geographical areas on the UI.
@@ -264,6 +315,16 @@ Known limitations include:
 * And probably a few more improvements which would be “nice to have”…
 
 ## Version history
+* 0.8:
+  * added mods.txt to mods-db.txt (repository) export functionality, including more restrictive mod meta-information rules;
+  * added optional Git integration for mods-db.txt update;
+  * merged continents “USA” and “North America” into new continent “USA / Canada”;
+  * added new continent “Middle America”;
+  * removed / merged countries ALA, IMN;
+  * more precise error feedback for missing/illegal mod data;
+  * fixed feedback for mods DB parsing errors;
+  * fixed positioning, modal behavior, and default button selection of all UI windows;
+  * fixed / restricted “Update mod DB” button visibility.
 * 0.7:
   * added a mod meta-information database which can be updated from the internet;
   * for newly-added mods, meta-information is auto-collected from the database and presented to the user with the option to automatically add mods information to mods.txt;
@@ -295,6 +356,12 @@ Known limitations include:
 * 0.1: Initial release
 
 ## Upgrade guide
+* 0.7 -> 0.8:
+  * Make sure to add the ```Continent.UC.Countries``` and ```Continent.UC=U.S.A. / Canada``` entries to your config.properties file.
+    * Note that the US states and Canada have been merged into the new Continent.UC= U.S.A. / Canada continent. In this continent, individual US states are treated as separate countries, and Canada is a country of that continent as well.
+  * Make sure to add the ```Continent.MA.Countries``` and ```Continent.MA=Middle America``` entries to your config.properties file.:
+    * Note that “Middle America” countries now belong to the new Continent.MA=Middle America continent. If you want to use the official definition (recommended), this most prominently includes ```Country.MEX``` (Mexico).
+  * Remove the ```Continent.NA.Countries``` and ```Continent.NA``` as well as the ```Continent.US.Countries``` and ```Continent.US``` entries from your config.properties file.
 * 0.6 -> 0.7:
   * For livrery mods, change the mod type id ```ModType.LI``` to ```ModType.AL``` for your mods.txt entries.
 * 0.5 -> 0.6:

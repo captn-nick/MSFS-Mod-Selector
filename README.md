@@ -177,7 +177,7 @@ In order to add a mod under Mod Selector management, you must:
 * add an entry to the mods.txt file, or use Mod Selector’s auto-registry function through the online mod database.
 
 ### Restrictions
-Note the following restrictions. When violated, they cause a warning / error, see below.
+Note the following restrictions. See also "Manually adding a mod" below for more details. When violated, they cause a warning / error, see further down.
 * Mod name must not be empty.
 * Mod names must be unique across all mods.txt entries.
 * Mod type must be one of the supported mod type.
@@ -240,7 +240,11 @@ entry whereas
 * ```CityOrIcaoOrAircrafttype```: one of the following:
   * ```City```: the actual name (no abbreviation!) of the city. Available for landmarks, cities, landscapes, and landscape fixes only. Omit this and the preceding tab if not used. 
   * ```Icao```: the ICAO code. Available for airports only. Omit this and the preceding tab if not used.
-  * ```Aircrafttype```: abbreviation of one of the supported aircraft types. Available for livreries and aircraft models only. Omit this and the preceding tab if not used.
+  * ```Aircrafttype```: abbreviation of one of the supported aircraft types. Available for livreries and aircraft models only. Omit this and the preceding tab if not used. Supported aircraft types are:
+    * ```PR```: Propeller plane
+    * ```TP```: Turboprop
+    * ```JT```: Jet
+    * ```AL```: Airliner
 * ```##``` (two hash signs, optionally surrounded by space): a separator. Separates off the following section of optional information. Omit if none of the following information is given.
 * ```Description```: a short description or “title” of the mod, e.g. the mod title as found on the download website.
 * ```Author```: the mod author’s name.

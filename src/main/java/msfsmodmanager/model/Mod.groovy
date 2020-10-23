@@ -11,7 +11,7 @@ import msfsmodmanager.ex.ModsParseException
 @ToString(includePackage=false, includeNames=true, excludes="description,author,url,active,file")
 class Mod {
     private static final String FLIGHTSIM_TO_URL_START = "https://flightsim.to/file/"
-    private static final String FLIGHTSIM_TO_URL_WITH_WWW_START = "https://www.flightsim.to/file/"
+    public static final String FLIGHTSIM_TO_URL_WITH_WWW_START = "https://www.flightsim.to/file/"
     
     final String line
     final int lineNo
@@ -33,6 +33,12 @@ class Mod {
     String url
     
     boolean active
+    
+    public Mod(String name) {
+        this.name = name
+        this.line = null
+        this.lineNo = -1
+    }
     
     protected Mod(String name, String line, int lineNo) {
         this.name = name
@@ -62,98 +68,100 @@ class Mod {
     
     private String commentsToTxt() {
         String ret = ""
-        if (description) ret += description + "\t"
-        if (author) ret += author + "\t"
+        if (description) ret += description
+        ret += "\t"
+        if (author) ret += author
+        ret += "\t"
         if (url) ret += url
         
-        if (ret) {
+        if (ret.trim()) {
             ret = "##\t" + ret
         }
         return ret
     }
     
-    public void checkBasicCorrectness(String fileName) {
+    public void checkBasicCorrectness(CheckErrors checkErrors) {
         if (!name) {
-            throw new ModsParseException.MissingDataForLineParseException(fileName, "mod name", line, lineNo)
+            checkErrors.errorsByField.name.t = CheckErrorType.MISSING
         }
         if (!type) {
-            throw new ModsParseException.MissingDataForLineParseException(fileName, "mod type", line, lineNo)
+            checkErrors.errorsByField.type.t = CheckErrorType.MISSING
         }
         if (continentRaw && !continent) {
-            throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continentRaw, line, lineNo)
+            checkErrors.errorsByField.continent.t = CheckErrorType.ILLEGAL
         }
     }
     
-    public void checkCanonicalCorrectness(String fileName) {
+    public void checkCanonicalCorrectness(CheckErrors checkErrors, String fileName) {
         if (type == ModType.OTHER) {
-            throw new ModsParseException.IllegalDataForLineParseException(fileName, "mod type", type.abbr, line, lineNo)
+            checkErrors.errorsByField.type.t = CheckErrorType.ILLEGAL
         }
         else if (type in [ModType.AIRPORT, ModType.LANDMARK, ModType.CITY, ModType.LANDSCAPE, ModType.LANDSCAPE_FIX]) {
             if (!continentRaw) {
-                throw new ModsParseException.MissingDataForLineParseException(fileName, "continent", line, lineNo)
+                checkErrors.errorsByField.continent.t = CheckErrorType.MISSING
             }
             else if (!continent) {
-                throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continentRaw, line, lineNo)
+                checkErrors.errorsByField.continent.t = CheckErrorType.ILLEGAL
             }
             else if (continent == Continent.OF) {
-                throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continent.abbr, line, lineNo)
+                checkErrors.errorsByField.continent.t = CheckErrorType.ILLEGAL
             }
             
             if (!country) {
-                throw new ModsParseException.MissingDataForLineParseException(fileName, "country", line, lineNo)
+                checkErrors.errorsByField.country.t = CheckErrorType.MISSING
             }
             else if (!isCanonicalCountry()) {
-                throw new ModsParseException.IllegalDataForLineParseException(fileName, "country", country, line, lineNo)
+                checkErrors.errorsByField.country.t = CheckErrorType.ILLEGAL
             }
             
             if (!isCorrectContinent()) {
-                throw new ModsParseException.IllegalContinentDataForLineParseException(fileName, continent.abbr, Continent.getContinentFor(country), country, line, lineNo)
+                checkErrors.errorsByField.continent.t = CheckErrorType.CANONICITY
             }
             
             if (type == ModType.AIRPORT) {
                 if (!isCanonicalIcao()) {
-                    throw new ModsParseException.MissingDataForLineParseException(fileName, "icao", line, lineNo)
+                    checkErrors.errorsByField.icao.t = CheckErrorType.ILLEGAL
                 }
             }
         }
         else if (type in [ModType.LIVRERY, ModType.AIRCRAFT_MODEL]) {
             if (continentRaw) {
                 if (!continent) {
-                    throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continentRaw, line, lineNo)
+                    checkErrors.errorsByField.continent.t = CheckErrorType.MISSING
                 }
                 else if (continent == Continent.OF) {
-                    throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continent.abbr, line, lineNo)
+                    checkErrors.errorsByField.continent.t = CheckErrorType.ILLEGAL
                 }
             }
             if (country) {
                 if (!isCanonicalCountry()) {
-                    throw new ModsParseException.IllegalDataForLineParseException(fileName, "country", country, line, lineNo)
+                    checkErrors.errorsByField.country.t = CheckErrorType.ILLEGAL
                 }
                 if (!isCorrectContinent()) {
-                    throw new ModsParseException.IllegalContinentDataForLineParseException(fileName, continent.abbr, Continent.getContinentFor(country), country, line, lineNo)
+                    checkErrors.errorsByField.continent.t = CheckErrorType.CANONICITY
                 }
             }
             
             if (!aircraftTypeRaw) {
-                throw new ModsParseException.MissingDataForLineParseException(fileName, "aircraft type", line, lineNo)
+                checkErrors.errorsByField.aircraftType.t = CheckErrorType.MISSING
             }
             else if (!aircraftType) {
-                throw new ModsParseException.IllegalDataForLineParseException(fileName, "aircraft type", aircraftTypeRaw, line, lineNo)
+                checkErrors.errorsByField.aircraftType.t = CheckErrorType.ILLEGAL
             }
         }
         
         if (!description) {
-            throw new ModsParseException.MissingDataForLineParseException(fileName, "description", line, lineNo)
+            checkErrors.errorsByField.description.t = CheckErrorType.MISSING
         }
         if (!author) {
-            throw new ModsParseException.MissingDataForLineParseException(fileName, "author", line, lineNo)
+            checkErrors.errorsByField.author.t = CheckErrorType.MISSING
         }
         
         if (!url) {
-            throw new ModsParseException.MissingDataForLineParseException(fileName, "url", line, lineNo)
+            checkErrors.errorsByField.url.t = CheckErrorType.MISSING
         }
         else if (!(url.startsWith(FLIGHTSIM_TO_URL_START) || url.startsWith(FLIGHTSIM_TO_URL_WITH_WWW_START))) {
-            throw new ModsParseException.IllegalDataForLineParseException(fileName, "url", url, line, lineNo)
+            checkErrors.errorsByField.url.t = CheckErrorType.ILLEGAL
         }
     }
     
@@ -165,6 +173,8 @@ class Mod {
     
     private boolean isCorrectContinent() {
         if (!country) return true
+        
+        if (!continent) return true
         
         return Continent.getContinentFor(country) == continent.abbr
     }
@@ -233,6 +243,115 @@ class Mod {
         // 2nd OR: 3-6 character ICAO
         // 3rd OR: local French ICAO codes
         return candidate ==~ /-|([A-Z0-9]{3,6})|(LF[0-9]{4})/
+    }
+    
+    // Hides Groovy's ugly inner class construction syntax (https://stackoverflow.com/a/27980914)
+    public CheckErrors checkErrors(String fileName) {
+        return new CheckErrors(fileName)
+    }
+    
+    @TupleConstructor(includes="fileName")
+    @ToString(includeNames=true)
+    public class CheckErrors {
+        String fileName
+        
+        Map<String, CheckErrorInfo> errorsByField = [:].withDefault { new CheckErrorInfo() }
+        
+        public boolean containsAnyErrors() {
+            return errorsByField.any { k, v -> v.t }
+        }
+        
+        public void throwIfFailure() {
+            if (containsAnyErrors()) {
+                throw new ModsParseException.ModCheckException(fileName, this)
+            }
+        }
+
+        public void throwSubException() {
+            // checkBasicCorrectness
+            if (errorsByField.name.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "mod name", line, lineNo)
+            }
+            if (errorsByField.type.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "mod type", line, lineNo)
+            }
+            if (errorsByField.continent.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continentRaw, line, lineNo)
+            }
+            
+            // checkCanonicalCorrectness
+            if (errorsByField.type.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "mod type", type.abbr, line, lineNo)
+            }
+            if (errorsByField.continent.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "continent", continentRaw, line, lineNo)
+            }
+            if (errorsByField.country.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "country", line, lineNo)
+            }
+            if (errorsByField.country.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "country", country, line, lineNo)
+            }
+            if (errorsByField.continent.t == CheckErrorType.CANONICITY) {
+                throw new ModsParseException.IllegalContinentDataForLineParseException(fileName, continent.abbr, Continent.getContinentFor(country), country, line, lineNo)
+            }
+            if (errorsByField.icao.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "icao", line, lineNo)
+            }
+            if (errorsByField.aircraftType.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "aircraft type", line, lineNo)
+            }
+            if (errorsByField.aircraftType.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "aircraft type", aircraftTypeRaw, line, lineNo)
+            }
+            if (errorsByField.description.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "description", line, lineNo)
+            }
+            if (errorsByField.author.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "author", line, lineNo)
+            }
+            if (errorsByField.url.t == CheckErrorType.MISSING) {
+                throw new ModsParseException.MissingDataForLineParseException(fileName, "url", line, lineNo)
+            }
+            if (errorsByField.url.t == CheckErrorType.ILLEGAL) {
+                throw new ModsParseException.IllegalDataForLineParseException(fileName, "url", url, line, lineNo)
+            }
+            
+            // Mods.checkRepositoryConsistency
+            if (errorsByField.name.t == CheckErrorType.DUPLICATE) {
+                throw new ModsParseException.DuplicateModNameForLineParseException(Mods.instance.fileName, errorsByField.name.payload, line, lineNo)
+            }
+            if (errorsByField.continent.t == CheckErrorType.COUNTRY_TO_CONTINENT_CONSISTENCY) {
+                throw new ModsParseException.ConflictingDataForLineParseException(Mods.instance.fileName, "continent", errorsByField.continent.payload, line, lineNo)
+            }
+            if (errorsByField.country.t == CheckErrorType.CITY_TO_COUNTRY_CONSISTENCY) {
+                throw new ModsParseException.ConflictingDataForLineParseException(Mods.instance.fileName, "country", errorsByField.country.payload, line, lineNo)
+            }
+            if (errorsByField.continent.t == CheckErrorType.CITY_TO_CONTINENT_CONSISTENCY) {
+                throw new ModsParseException.ConflictingDataForLineParseException(Mods.instance.fileName, "continent", errorsByField.continent.payload, line, lineNo)
+            }
+        }
+        
+        public Mod getMod() {
+            return Mod.this
+        }
+    }
+    
+    @ToString(includeNames=true)
+    public static class CheckErrorInfo {
+        CheckErrorType t
+        FirstDefinition payload
+    }
+    
+    // can't make this an inner class of the inner class CheckErrors because the latter would have to be static
+    public static enum CheckErrorType {
+        MISSING,
+        ILLEGAL,
+        DUPLICATE,
+        CANONICITY,
+        COUNTRY_TO_CONTINENT_CONSISTENCY,
+        CITY_TO_COUNTRY_CONSISTENCY,
+        CITY_TO_CONTINENT_CONSISTENCY,
     }
 }
 

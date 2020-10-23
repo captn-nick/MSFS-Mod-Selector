@@ -1,9 +1,10 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.main;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import msfsmodmanager.model.AircraftType;
+import msfsmodmanager.ui.I18N;
 
 public class AircraftPanel extends javax.swing.JPanel {
 

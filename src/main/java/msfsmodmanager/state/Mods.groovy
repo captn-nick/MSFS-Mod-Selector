@@ -14,7 +14,7 @@ class Mods {
     protected Map<String, Mod> modsByName = [:]
     FirstDefinitions firstDefinitions
     
-    protected String getFileName() {
+    public String getFileName() {
         return "mods.txt"
     }
     
@@ -50,14 +50,26 @@ class Mods {
                 throw new ModsParseException.LineParseException(fileName, it, i, ex)
             }
 
-            mod.checkBasicCorrectness(fileName)
-            checkRepositoryConsistency(mod, it, i)
+            Mod.CheckErrors checkErrors = mod.checkErrors(fileName)
+            mod.checkBasicCorrectness(checkErrors)
+            checkRepositoryConsistency(checkErrors, mod, it, i)
+            
 
             return [(mod.name): mod]
         })
     }
     
-    private Mod parseLine(String it, int i) {
+    public static Mod parseSafeLine(String line) {
+        Mod mod
+        if (!line.contains("\t")) {
+            mod = new Mod(line)
+        }
+        else {
+            mod = parseLine(line, -1)
+        }
+    }
+    
+    private static Mod parseLine(String it, int i) {
         it = it.trim()
         String[] line = it.split("##", -1)
 
@@ -84,11 +96,49 @@ class Mods {
         return mod
     }
     
-    protected void checkRepositoryConsistency(Mod mod, String line, int lineNo) {      
-        firstDefinitions.checkDuplicateModNames(line, lineNo, mod)
-        firstDefinitions.checkCityCountryDefinitionConsistency(line, lineNo, mod)
-        firstDefinitions.checkCountryDefinitionConsistency(line, lineNo, mod)
-        firstDefinitions.checkCityContinentDefinitionConsistency(line, lineNo, mod)
+    public void addAllMods(Map<String, Mod> newMods, boolean collectErrors=false) {
+        // reset here to not keep anything in memory
+        resetFirstDefinitions()
+        
+        mods.each { Mod mod ->
+            Mod.CheckErrors checkErrors = mod.checkErrors(fileName)
+            checkRepositoryConsistency(checkErrors, mod, mod.line, mod.lineNo)
+        }
+        
+        Map<String, Mod.CheckErrors> checkErrorsByMod = [:]
+        newMods.each { String name, Mod mod ->
+            try {
+                Mod.CheckErrors checkErrors = mod.checkErrors(fileName)
+                checkCorrectness(checkErrors, mod)
+                checkRepositoryConsistency(checkErrors, mod, mod.line, mod.lineNo)
+                checkErrors.throwIfFailure()
+            }
+            catch(ModsParseException.ModCheckException ex) {
+                if (collectErrors) {
+                    checkErrorsByMod[ex.checkErrors.mod.name] = ex.checkErrors
+                }
+                else {
+                    ex.checkErrors.throwSubException()
+                }
+            }
+        }
+        
+        if (!checkErrorsByMod.empty) {
+            throw new ModsParseException.MultipleModsCheckException(checkErrorsByMod)
+        }
+        
+        modsByName.putAll(newMods)
+    }
+    
+    protected void checkCorrectness(Mod.CheckErrors checkErrors, Mod mod) {
+        mod.checkBasicCorrectness(checkErrors)
+    }
+    
+    protected void checkRepositoryConsistency(Mod.CheckErrors checkErrors, Mod mod, String line, int lineNo) {      
+        firstDefinitions.checkDuplicateModNames(checkErrors, line, lineNo, mod)
+        firstDefinitions.checkCityCountryDefinitionConsistency(checkErrors, line, lineNo, mod)
+        firstDefinitions.checkCountryDefinitionConsistency(checkErrors, line, lineNo, mod)
+        firstDefinitions.checkCityContinentDefinitionConsistency(checkErrors, line, lineNo, mod)
     }
     
     public List<String> getModNames() {
@@ -141,17 +191,21 @@ class Mods {
         Map<String, FirstDefinition> countryByCity = [:]
         Map<String, FirstDefinition> continentByCity = [:]
         
-        protected void checkDuplicateModNames(String line, int lineNo, Mod mod) {
+        protected void checkDuplicateModNames(Mod.CheckErrors checkErrors, String line, int lineNo, Mod mod) {
+            if (checkErrors.errorsByField.name.t) return
+            
             if (!modNames[mod.name]) {
                 modNames[mod.name] = new FirstDefinition(line, lineNo, mod)
             }
             else {
                 FirstDefinition firstDefinition = modNames[mod.name]
-                throw new ModsParseException.DuplicateModNameForLineParseException(Mods.this.fileName, firstDefinition, line, lineNo)  
+                checkErrors.errorsByField.name.t = Mod.CheckErrorType.DUPLICATE
             }
         }
         
-        protected void checkCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
+        protected void checkCountryDefinitionConsistency(Mod.CheckErrors checkErrors, String line, int lineNo, Mod mod) {
+            if (checkErrors.errorsByField.country.t) return
+            
             if (!mod.country) {
                 return
             }
@@ -162,12 +216,15 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = continentByCountry[mod.country]
                 if (firstDefinition.mod.continent != mod.continent) {
-                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "continent", firstDefinition, line, lineNo)
+                    checkErrors.errorsByField.continent.t = Mod.CheckErrorType.COUNTRY_TO_CONTINENT_CONSISTENCY
+                    checkErrors.errorsByField.continent.payload = firstDefinition
                 }
             }
         }
         
-        protected void checkCityCountryDefinitionConsistency(String line, int lineNo, Mod mod) {
+        protected void checkCityCountryDefinitionConsistency(Mod.CheckErrors checkErrors, String line, int lineNo, Mod mod) {
+            if (checkErrors.errorsByField.city.t) return
+            
             if (!mod.city) {
                 return
             }
@@ -178,12 +235,15 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = countryByCity[mod.city]
                 if (firstDefinition.mod.country != mod.country) {
-                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "country", firstDefinition, line, lineNo)
+                    checkErrors.errorsByField.country.t = Mod.CheckErrorType.CITY_TO_COUNTRY_CONSISTENCY
+                    checkErrors.errorsByField.country.payload = firstDefinition
                 }
             }
         }
 
-        protected void checkCityContinentDefinitionConsistency(String line, int lineNo, Mod mod) {
+        protected void checkCityContinentDefinitionConsistency(Mod.CheckErrors checkErrors, String line, int lineNo, Mod mod) {
+            if (checkErrors.errorsByField.city.t) return
+            
             if (!mod.city) {
                 return
             }
@@ -194,7 +254,8 @@ class Mods {
             else {
                 FirstDefinition firstDefinition = continentByCity[mod.city]
                 if (firstDefinition.mod.continent != mod.continent) {
-                    throw new ModsParseException.ConflictingDataForLineParseException(Mods.this.fileName, "continent", firstDefinition, line, lineNo)
+                    checkErrors.errorsByField.continent.t = Mod.CheckErrorType.CITY_TO_CONTINENT_CONSISTENCY
+                    checkErrors.errorsByField.continent.payload = firstDefinition
                 }
             }
         }

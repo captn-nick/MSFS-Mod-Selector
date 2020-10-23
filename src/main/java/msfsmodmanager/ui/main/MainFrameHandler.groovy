@@ -1,8 +1,9 @@
-package msfsmodmanager.ui
+package msfsmodmanager.ui.main
 
 import groovy.transform.CompileStatic
 import msfsmodmanager.Main
 
+import msfsmodmanager.ui.*
 import msfsmodmanager.logic.*
 import msfsmodmanager.model.*
 

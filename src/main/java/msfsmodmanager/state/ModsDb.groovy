@@ -5,7 +5,7 @@ import groovy.time.TimeDuration
 import groovy.transform.CompileStatic
 import msfsmodmanager.Main
 import msfsmodmanager.logic.ModsDbHandler
-import msfsmodmanager.model.Mod
+import msfsmodmanager.model.*
 import msfsmodmanager.util.WebReader
 
 @CompileStatic
@@ -65,21 +65,9 @@ class ModsDb extends Mods {
         return success
     }
     
-    public void addAllMods(Map<String, Mod> newMods) {
-        // reset here to not keep anything in memory
-        resetFirstDefinitions()
-        
-        mods.each { Mod mod ->
-            checkRepositoryConsistency(mod, mod.line, mod.lineNo)
-        }
-        
-        newMods.each { String name, Mod mod ->
-            mod.checkBasicCorrectness(Mods.instance.fileName)
-            mod.checkCanonicalCorrectness(Mods.instance.fileName)
-            checkRepositoryConsistency(mod, mod.line, mod.lineNo)
-        }
-        
-        modsByName.putAll(newMods)
+    protected void checkCorrectness(Mod.CheckErrors checkErrors, Mod mod) {
+        mod.checkBasicCorrectness(checkErrors)
+        mod.checkCanonicalCorrectness(checkErrors, Mods.instance.fileName)
     }
     
     protected List<Mod> sortBeforeSaving(List<Mod> mods) {

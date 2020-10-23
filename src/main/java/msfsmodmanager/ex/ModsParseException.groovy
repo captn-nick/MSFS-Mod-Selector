@@ -2,7 +2,7 @@ package msfsmodmanager.ex
 
 import groovy.transform.CompileStatic
 import groovy.transform.TupleConstructor
-import msfsmodmanager.model.FirstDefinition
+import msfsmodmanager.model.*
 
 @CompileStatic
 abstract class ModsParseException extends RuntimeException {
@@ -28,7 +28,7 @@ abstract class ModsParseException extends RuntimeException {
         int lineNo
         
         public LineParseException(String errorNo="100", boolean showStackTrace=true, 
-            String fileName, String line, int lineNo, String info="Cannot read line ${lineNo} in ${fileName}", Exception cause) {
+            String fileName, String line, int lineNo, String info="Cannot read line ${lineNo} in ${fileName}.", Exception cause) {
             super(errorNo, showStackTrace, info, cause)
             this.line = line
             this.lineNo = lineNo
@@ -36,6 +36,29 @@ abstract class ModsParseException extends RuntimeException {
         
         public String getMessage() {
             return info + "\n" + line
+        }
+    }
+    
+    public static class MultipleModsCheckException extends ModsParseException {
+        Map<String, Mod.CheckErrors> checkErrorsByMod
+        
+        public MultipleModsCheckException(Map<String, Mod.CheckErrors> checkErrorsByMod) {
+            super("130", true, /Errors found in multiple mods while reading them./, {
+                try { checkErrorsByMod.entrySet().iterator().next().value.throwSubException() } catch (Exception ex) { return ex }
+            }() as Exception)
+            this.checkErrorsByMod = checkErrorsByMod
+        }
+    }
+    
+    public static class ModCheckException extends LineParseException {
+        Mod.CheckErrors checkErrors
+        
+        public ModCheckException(String fileName, Mod.CheckErrors checkErrors) {
+            super("131", true, fileName, null, -1, /Multiple errors found when reading lines in ${fileName}./, {
+                try { checkErrors.throwSubException() } catch (Exception ex) { return ex }
+            }() as Exception)
+            
+            this.checkErrors = checkErrors
         }
     }
     

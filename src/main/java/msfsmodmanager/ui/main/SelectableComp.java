@@ -1,4 +1,4 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.main;
 
 public interface SelectableComp {
     public String getName();

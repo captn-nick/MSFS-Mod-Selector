@@ -1,8 +1,9 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.main;
 
 import java.awt.Font;
 import java.awt.Insets;
 import javax.swing.JCheckBox;
+import msfsmodmanager.ui.I18N;
 
 public class SelectableCheckBox extends JCheckBox implements SelectableComp {
     private final String name;

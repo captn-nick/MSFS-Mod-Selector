@@ -7,7 +7,7 @@ import msfsmodmanager.logic.ModChecker
 import msfsmodmanager.model.*
 import msfsmodmanager.state.*
 import msfsmodmanager.ui.Dialogs
-import msfsmodmanager.ui.MainFrame
+import msfsmodmanager.ui.main.MainFrame
 import msfsmodmanager.util.CmdLine
 import msfsmodmanager.util.WebReader
 
@@ -15,7 +15,13 @@ import msfsmodmanager.util.WebReader
 class Main {
     public static boolean FIRST_START = false
     
-    public static void main(String[] args) {        
+    public static void main(String[] args) {
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            public void uncaughtException(Thread t, Throwable e) {
+                ErrorHandler.handleGlobalError(e);
+            }
+        });
+        
         try {
             start(args)
         }
@@ -65,6 +71,8 @@ class Main {
         Mods.instance.loadRegisteredMods()
         ModsDb.instance.loadRegisteredMods()
         
+        MasterData.init()
+        
         Continent.loadContinents()
         Cities.loadCities()
         
@@ -110,13 +118,7 @@ class Main {
         ModsDb.DbInformationFound informationFromDb = ModsDb.instance.replaceWithDbInformation(modNames)
         
         if (!modNames.empty) {
-            return ErrorHandler.error(
-                "Error.030",
-                "Found unregistered mods:",
-                informationFromDb.lines.join("\n"),
-                null,
-                informationFromDb.foundAny ? ErrorHandler.ErrorType.UNREGISTERED_MODS_IN_DB : ErrorHandler.ErrorType.UNREGISTERED_MODS
-            )
+            return ErrorHandler.unregisteredModsFoundError(informationFromDb.lines)
         }
         return true
     }

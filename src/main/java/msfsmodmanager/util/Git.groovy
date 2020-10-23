@@ -1,7 +1,7 @@
 package msfsmodmanager.util
 
 import groovy.transform.CompileStatic
-import msfsmodmanager.ui.GitFrame
+import msfsmodmanager.ui.git.GitFrame
 
 @CompileStatic
 class Git {

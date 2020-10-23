@@ -1,4 +1,4 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.git;
 
 import groovy.lang.Closure;
 import java.awt.Color;
@@ -24,9 +24,7 @@ public class GitFrame extends javax.swing.JDialog {
         this.okButtonAction = okButtonAction;
         
         initComponents();
-        setLocationRelativeTo(null);
-        getRootPane().setDefaultButton(okButton);
-        okButton.requestFocus();
+        SwingUtil.initPanel(this, okButton);
         
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
@@ -57,7 +55,6 @@ public class GitFrame extends javax.swing.JDialog {
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setTitle(error ? "Git update: Error" : "Git update");
-        setPreferredSize(new java.awt.Dimension(885, 487));
 
         textArea.setColumns(20);
         textArea.setRows(5);

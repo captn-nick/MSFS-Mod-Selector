@@ -27,6 +27,14 @@ class I18N {
         bundle = ResourceBundle.getBundle(BASE_NAME, Locale.getDefault(), loader);
     }
     
+    public static String getCountryWithContinent(String key) {
+        String ret = getString(key)
+        if (getString(key + ".Continent") == "UC") {
+            ret += " (US)"
+        }
+        return ret
+    }
+    
     public static String getString(String key) {
         String ret = null
         
@@ -52,6 +60,18 @@ class I18N {
         }
         catch (MissingResourceException ex) {
             return null
+        }
+    }
+    
+    public static Set<String> getAllKeysMatching(String regex) {
+        Set<String> all = [] as Set
+        if (bundle != null) {
+            all = bundle.getKeys().toSet()
+        }
+        all += defaultBundle.getKeys().toSet()
+        
+        return all.findAll {
+            it ==~ regex
         }
     }
 }

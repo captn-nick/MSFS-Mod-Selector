@@ -67,7 +67,7 @@ class Continent {
     }
     
     public String toString() {
-        return abbr
+        return I18N.getString("Continent.${abbr}")
     }
 }
 

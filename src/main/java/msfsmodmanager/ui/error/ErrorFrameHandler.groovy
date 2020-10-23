@@ -1,4 +1,4 @@
-package msfsmodmanager.ui
+package msfsmodmanager.ui.error
 
 import groovy.transform.CompileStatic
 import msfsmodmanager.Main
@@ -14,6 +14,7 @@ class ErrorFrameHandler {
         this.frame = frame
     }
     
+    @Deprecated
     public void autoAddMods() {
         List<String> lines = frame.detailsTextArea.text.split("\n") as List<String>
         lines = lines.findAll { String line ->
@@ -26,20 +27,9 @@ class ErrorFrameHandler {
         Main.restart()
     }
     
+    @Deprecated
     public void updateModsDb() {
-        SwingUtil.closeWindow(frame);
-        
-        if (ModsDb.instance.update() {
-            Main.restart();
-        }) {
-            if (!ModsDb.UPDATE_WITH_GIT) {
-                Dialogs.updateModsDbSuccessful();
-            }
-            else {
-                return // ModsDb.instance.update() will take control.
-            }
-        }
-        Main.restart();
+        throw new UnsupportedOperationException("Use EditModsFrameHandler instead.")
     }
 }
 

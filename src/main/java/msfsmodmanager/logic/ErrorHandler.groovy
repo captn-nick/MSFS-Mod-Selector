@@ -3,8 +3,10 @@ package msfsmodmanager.logic
 import groovy.transform.CompileStatic
 
 import msfsmodmanager.ex.ModsParseException
+import msfsmodmanager.state.Mods
+import msfsmodmanager.ui.edit.EditModsFrame
 import msfsmodmanager.util.StringUtil
-import msfsmodmanager.ui.ErrorFrame
+import msfsmodmanager.ui.error.ErrorFrame
 
 @CompileStatic
 class ErrorHandler {
@@ -17,11 +19,11 @@ class ErrorHandler {
         UNREGISTERED_MODS_IN_DB,
     }
     
-    public static void handleGlobalError(Exception ex) {
+    public static void handleGlobalError(Throwable ex) {
         handleGlobalError(ex, true)
     }
     
-    public static void handleGlobalError(Exception ex, boolean forceShutdown) {
+    public static void handleGlobalError(Throwable ex, boolean forceShutdown) {
         if (ex in ModsParseException.LineParseException) {
             ModsParseException.LineParseException lpex = (ModsParseException.LineParseException)ex
             
@@ -42,6 +44,10 @@ class ErrorHandler {
                 forceShutdown
             )
         }
+    }
+    
+    public static boolean unregisteredModsFoundError(List<String> lines) {
+        EditModsFrame.show( lines.collect { Mods.parseSafeLine(it) } )
     }
     
     public static boolean error(String title, String message, String details, String stackTrace=null,

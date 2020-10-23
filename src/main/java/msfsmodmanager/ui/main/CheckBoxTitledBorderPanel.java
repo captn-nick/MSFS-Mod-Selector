@@ -1,4 +1,4 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.main;
 
 import java.util.List;
 import javax.swing.JComponent;

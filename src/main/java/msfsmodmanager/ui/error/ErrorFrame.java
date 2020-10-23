@@ -1,4 +1,4 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.error;
 
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
@@ -49,9 +49,7 @@ public class ErrorFrame extends javax.swing.JDialog {
         this.forceShutdown = forceShutdown;
         
         initComponents();
-        setLocationRelativeTo(null);
-        getRootPane().setDefaultButton(quitButton);
-        quitButton.requestFocus();
+        SwingUtil.initPanel(this, quitButton);
         
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
@@ -96,7 +94,7 @@ public class ErrorFrame extends javax.swing.JDialog {
         quitButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(885, 487));
+        setPreferredSize(new java.awt.Dimension(723, 587));
         getContentPane().setLayout(new java.awt.BorderLayout(0, 4));
 
         stacktracePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
@@ -219,64 +217,34 @@ public class ErrorFrame extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void quitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitButtonActionPerformed
-        try {
-            if (forceShutdown) {
-                System.exit(1);
-            }
-            else {
-                SwingUtil.closeWindow(this);
-            }
+        if (forceShutdown) {
+            System.exit(1);
         }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
+        else {
+            SwingUtil.closeWindow(this);
         }
     }//GEN-LAST:event_quitButtonActionPerformed
 
     private void stacktraceInfoLabel4MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel4MouseReleased
-        try {
-            Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector");
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector");
     }//GEN-LAST:event_stacktraceInfoLabel4MouseReleased
 
     private void stacktraceInfoLabel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_stacktraceInfoLabel2MouseReleased
-        try {
-            Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector/issues");
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        Browser.openWebpage("https://github.com/captn-nick/MSFS-Mod-Selector/issues");
     }//GEN-LAST:event_stacktraceInfoLabel2MouseReleased
 
     private void duplicatesDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicatesDeleteButtonActionPerformed
-        try {
-            ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
-            SwingUtil.closeWindow(this);
-            Main.restart();
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        ModDeleter.deleteInTempDirectory(Arrays.asList( details.split("\n")));
+        SwingUtil.closeWindow(this);
+        Main.restart();
     }//GEN-LAST:event_duplicatesDeleteButtonActionPerformed
 
     private void autoAddModsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_autoAddModsButtonActionPerformed
-        try {
-            handler.autoAddMods();
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        handler.autoAddMods();
     }//GEN-LAST:event_autoAddModsButtonActionPerformed
 
     private void updateModDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateModDbButtonActionPerformed
-        try {
-            handler.updateModsDb();
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        handler.updateModsDb();
     }//GEN-LAST:event_updateModDbButtonActionPerformed
 
     public static void show(String title, String message, String details, String stackTrace, ErrorType errorType, boolean forceShutdown) {

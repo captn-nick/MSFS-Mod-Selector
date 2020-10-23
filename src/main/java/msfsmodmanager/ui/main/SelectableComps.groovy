@@ -1,4 +1,4 @@
-package msfsmodmanager.ui
+package msfsmodmanager.ui.main
 
 import groovy.transform.CompileStatic
 

@@ -5,7 +5,6 @@ LM	EU	GBR	landmark-london1	London ## An example Landmark in London!	someone else
 LM	EU	GBR	landmark-london2	London ## A 2nd example Landmark in London!	someone else	https://www.flightsim.to/file/landmark-london2
 LM	EU	GBR	landmark-birmingham	Birmingham ## A landmark in Birmingham, GBR	someone else	https://www.flightsim.to/file/landmark-birmingham
 LM	EU	NLD	landmark-amsterdam	Amsterdam ## A landmark in Amsterdam!	someone else	https://www.flightsim.to/file/landmark-amsterdam
-CT	EU	ROU	city-tallinn	Tallinn ## A city in Europe	someone else	https://www.flightsim.to/file/city-tallinn
+CT	EU		city-tallinn	Tallinn ## A city in Europe	someone else	https://www.flightsim.to/file/city-tallinn
 AM			airplane-model	AL ## An airplane model	someone else	https://www.flightsim.to/file/airplane-model
 AP	AA	GRL	airport-narsarsuaq	BGBW	##	BGBW Narsarsuaq Greenland	thedude	https://www.flightsim.to/file/734/bgbw-narsarsuaq-greenland
-LM	EU	Sco	BroughtyCastle	Dundee	##	Broughty Castle, Dundee	MostlyRandom	https://www.flightsim.to/file/966/broughty-castle-dundee

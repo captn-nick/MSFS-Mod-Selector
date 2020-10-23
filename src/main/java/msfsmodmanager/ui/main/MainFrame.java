@@ -1,8 +1,10 @@
-package msfsmodmanager.ui;
+package msfsmodmanager.ui.main;
 
 import msfsmodmanager.model.Continent;
 import msfsmodmanager.model.ModType;
 import msfsmodmanager.logic.ErrorHandler;
+import msfsmodmanager.ui.I18N;
+import msfsmodmanager.util.SwingUtil;
 
 public class MainFrame extends javax.swing.JFrame {
     public final ContinentPanel eu = new ContinentPanel(Continent.EU);
@@ -24,9 +26,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
-        setLocationRelativeTo(null);
-        getRootPane().setDefaultButton(applyButton);
-        applyButton.requestFocus();
+        SwingUtil.initPanel(this, applyButton);
     }
 
     /**
@@ -158,21 +158,11 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void applyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyButtonActionPerformed
-        try {
-            handler.apply();
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        handler.apply();
     }//GEN-LAST:event_applyButtonActionPerformed
 
     private void deactivateAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deactivateAllButtonActionPerformed
-        try {
-            handler.deactivateAll();
-        }
-        catch (Exception ex) {
-            ErrorHandler.handleGlobalError(ex);
-        }
+        handler.deactivateAll();
     }//GEN-LAST:event_deactivateAllButtonActionPerformed
 
     private void contributeToModsDbButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_contributeToModsDbButtonActionPerformed

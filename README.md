@@ -321,7 +321,7 @@ Supported command line arguments:
 For installing new mods:
 * First, use the “Deactivate all” function to move all current mods into the Temp folder.
 * Then, copy/move/unzip your newly-downloaded mods into the Community folder.
-* Run the Mod Selector and watch out for its warning messages. Add mods to the mods.txt file (or correct mod sub-directory structure, if needed; or remove duplicated mods) to correct the errors step by step.
+* Run the Mod Selector and watch out for its warning messages. Correct mod sub-directory structure, if needed; or remove duplicated mods to correct the errors step by step. Then, register all mods using the "Add mods" UI.
 * Finally, when the UI shows up, you can be sure that you again have clean mod folders and that all mods are correctly registered with Mod Selector.
 
 ## Known limitations

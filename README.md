@@ -107,6 +107,7 @@ labels.properties uses the same key-value entry format as config.properties.
 
 The following keys are of note:
 * ```ModType.XY```: defines the name of mod type XY as it is displayed in the UI.
+* ```ModType.XY.dropdown```: defines the name of mod type XY as it is displayed in the "Add mod" UI's dropdown component.
 * ```AircraftType```: defines the title of the “aircraft” section as it is displayed in the UI.
 * ```AircraftType.XY```: defines the name of aircraft type XY as it is displayed in the UI.
 * ```Continent.XY```: defines the name of continent XY as it is displayed in the UI.

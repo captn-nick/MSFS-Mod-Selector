@@ -22,26 +22,25 @@ Here’s how this works:
 
 **Mod Selector now auto-discovers meta-information already present in the database.**
 
-A more comfortable UI for adding mods will follow soon. Stay tuned!
+**Starting with version 0.9, Mod Selector features a simple UI for adding mods.**
 
 ## Usage warning
 This program is still early beta. USE AT YOUR OWN RISK!
 It is highly recommended that you create a backup of your mods (MSFS Community folder) before using this program.
 
-**Until V. 1.0 is reached, please expect breaking changes with each version jump!**
+**As soon as V. 1.0 is out, support for previous 0.x versions will end.**
 
 ## Project roadmap
 All of this is subject to change.
-* V. 0.9: Wizard for adding mods to mods.txt.
-* V. 0.10: Improve mods adding wizard with automatic online mod information lookup.
-* V. 0.11: Make continent sub-panel sizes adjustable; show mod selection feedback.
-* V. 0.12: Local / online individual mod search by keywords.
+* V. 1.0: Improve mods adding wizard with automatic online mod information lookup.
+* V. 1.1: Make continent sub-panel sizes adjustable; show mod selection feedback.
+* V. 1.2: Local / online individual mod search by keywords.
 
 ## Prerequisites
 Mod Selector requires Java to run.
 
 ## Download
-Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.8/MsfsModSelector.0.8.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
+Download the [latest version ZIP file](https://github.com/captn-nick/MSFS-Mod-Selector/releases/download/0.9/MsfsModSelector.0.9.zip) from the [Releases page](https://github.com/captn-nick/MSFS-Mod-Selector/releases).
 
 ## Content
 The program consists of 4 components:
@@ -174,36 +173,38 @@ However, for uploading your own mod definition to the online central repository,
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
 * place the mod folder in the Community or Temp directory
-* add an entry to the mods.txt file, or use Mod Selector’s auto-registry function through the online mod database.
+* register the mod with Mod Selector. Note that Mod Selector will help you registering mods which it found in the online mod database. See below for details.
 
 ### Restrictions
-Note the following restrictions. See also "Manually adding a mod" below for more details. When violated, they cause a warning / error, see further down.
-* Mod name must not be empty.
-* Mod names must be unique across all mods.txt entries.
-* Mod type must be one of the supported mod type.
-* Continent must be one of the supported continents or empty.
+Note the following restrictions. When violated, they cause a warning / error.
+* Mod type must be one of the supported mod types.
 * Cities must be uniquely linked to a country and a continent across all mods.txt entries, i.e. a city must not be linked to one country/continent in one entry, and to another in another entry.
 * Countries must be uniquely linked to a continent across all mods.txt entries, i.e. a country must not be linked to one continent in one entry, and to another in another entry.
 
-### Using Mod Selector’s online mod database
-![Adding a mod](/documentation/screenshot2.png)
+### Adding a mod through the UI
+![Adding a mod](/documentation/screenshot-add-mods.png)
 
-Mods can be auto-registered by Mod Selector if found in the central mods DB.
+First, start up Mod Selector. If it finds a mod that is not registered yet, a UI will show, listing all the newly found mods which you can then add. You must register all mods before you can continue to the main window.
 
-First, start up Mod Selector. If it finds a mod that is not registered in mods.txt yet, the “Error.030” window will pop up.
+The “Add mod” window lists all mods by their folder name on the left and the properties of the currently selected mod on the right.
 
-Mod Selector will try to find registry information about all unknown mods in your central mods DB which contains information about all MSFS mods.
+For all mods found in the central mod repository, properties will be pre-filled.
 
-If it can’t find information about a particular mod, try updating your mods DB by pressing the “Update…” button. Note that Mod Selector does not directly search for information online, but rather, updates its mods DB with information from the internet and then uses it as a local source. That’s why it’s important to update your local mods DB regularly. Think of it as your virus scanner’s virus definition database.
+Press the “Update mod DB” button to retrieve the newest update from the online mod repository, and to update the UI with its values.
+* Note that this will reload the UI, and your previous inputs will be discarded.
+Note that Mod Selector does not directly search for information online, but rather, updates its mods DB with information from the internet and then uses it as a local source. That’s why it’s important to update your local mods DB regularly. Think of it as your virus scanner’s virus definition database.
 
-For all mods found in the DB, Mod Selector will show the full information found for each mod. You can then:
-* Modify the information for any line
-* Delete any line
-* Leave any line as is
+Then, go though the list of mods and update their properties accordingly. Note:
+* There is an autocomplete function for some properties.
+* Use your keyboard to quickly select a dropdown entry by typing the beginning of an entry.
+* Tab spaces will be converted into simple spaces when an input component loses focus.
+* Surplus spaces will be trimmed while typing.
 
-and press the “Auto-add” button to add registration information for these (modified) lines to mods.txt.
+When you are finished, press “Add all”. This will register all mods with Mod Selector. If an input is erroneous, it will be marked in the UI:
+* Mod definitions with erroneous properties will be marked in red in the list;
+* individual erroneous properties will be marked in red and a text will explain the error in detail.
 
-For mods unknown to the mods DB, only the mod line will be shown. You have to add these mods manually to mods.txt.
+You must correct all errors in order to add the mods.
 
 ### Contributing to Mod Selector’s online mod database
 If you decided to contribute your own mod definitions back to the central repository, first of all, thank you!
@@ -216,10 +217,14 @@ In order to integrate Mode Selector with Git to use it to download / upload mod 
 * In your config.properties file, change the following property: ModsDb.updateWithGit=true.
 This latter property change will make sure that when clicking “Update mods DB”, rather than simply HTTP-downloading the latest mods-db.txt file content, Mod Selector will actually make a Git pull in its folder instead. This is done so to make sure both download and upload are managed by Git to prevent version conflicts.
 If you are in “Git mode”:
-* To download the newest mod definitions, click on the “Update mods DB” button. This simply does a Git pull. The concole output will be presented in a separate Window. If the pull command failed, please use your local Git client to solve the problem.
+* To download the newest mod definitions, click on the “Update mods DB” button. This simply does a Git pull. The console output will be presented in a separate Window. If the pull command failed, please use your local Git client to solve the problem.
 * To upload your own mod definitions, click on “Contribute to mods DB” in the main window. This will add all your own mod-definitions to mods-db.txt, check them for consistency, and sort them. Note that for adding mods to the central repository, additional restrictions on mod meta-information are in place. [Read more about these restrictions here.](https://github.com/captn-nick/MSFS-Mod-Repository#restrictions-for-contributions) You then have to use your local Git client to actuall upload (push) that file to the remote repository (and file a pull request).
 
-### Manually adding a mod
+### Manually adding a mod via mods.txt file editing
+**Note: since v. 0.9, this is discouraged for end-users. Please use the much more comfortable UI instead to add mods (see above).**
+
+The **mods.txt** file holds the mods registry.
+
 A mods.txt file entry consists of a
 
 <code>Type&#9;Continent&emsp;Country&emsp;Name&emsp;CityOrIcaoOrAircrafttype ## Description&emsp;Author&emsp;Website</code>
@@ -261,9 +266,16 @@ Examples (note: this project is not affiliated with these mods in any way):
 
 [You can find **a mods.txt file with 500+ flightsim.to mods** here](https://github.com/captn-nick/MSFS-Mod-Repository/blob/master/mods-db.txt). (This is the database used by Mod Selector for mod registry information lookup.)
 
+### mods.txt entry restrictions
+Note the following restrictions when manually editing mods.txt. When using the UI to add a mod, they are implicitly checked. When violated, they cause a warning / error, see [here](https://github.com/captn-nick/MSFS-Mod-Selector#warnings-and-errors).
+* Mod name must not be empty.
+* Mod names must be unique across all mods.txt entries.
+* Continent must be one of the supported continents or empty.
+
 ## Start and usage
-* Start the Mod Selector by double-clicking the program file or via the command line, see below.
-* If there are startup errors / warnings, see below.
+* Start the Mod Selector by double-clicking the program file or via the command line, [see below](https://github.com/captn-nick/MSFS-Mod-Selector#starting-from-the-command-line).
+* If there are startup errors / warnings, [see below](https://github.com/captn-nick/MSFS-Mod-Selector#warnings-and-errors).
+* If you need to register newly-downloaded mods, [see above](https://github.com/captn-nick/MSFS-Mod-Selector#adding-a-mod).
 * Otherwise, the main UI will show up.
 * In the top bar, you can globally select / deselect entire mod categories. Note that liveries are not bound to any of the geographical areas below.
 * In the main UI, you can select / deselect mods by continent, country, and city.
@@ -288,8 +300,7 @@ Each error is designated with an ID. It can be found in the error UI’s header 
 * **Error.001**: An unexpected freak error. Possibly, there is something very wrong with your system or configuration. Make sure you followed this README exactly for the setup. If you did so, this is possibly a bug. Please report it by opening an issue.
 * **Error.010**: Found mods which weren't registered and have a corrupted directory structure: a combination of Error.030 and Error.050. see below on how to fix them individually.
 * **Error.020**: Found mods which are duplicated (one in Community, one in Temp folder): as the text says. This may happen if you moved all mods into the Temp folder first (using the “Deactivate all” function, and then added new versions of these mods into the Community folder while the old version of the mod (with the same folder name) is still present in the Temp folder. In this case, the UI will present you with the additional option to delete the surplus mod folder in the Temp directory. Not that if you click that button, that mod folder will be deleted immediately and permanently!
-* **Error.030**: Found unregistered mods: You have some mod folders which don’t correspond to an entry in your mods.txt file. Make sure to register each mod with a mods.txt entry first. See “Adding a mod” above, or delete the mod’s folder.
-* **Error.040**: Found mods which were registered but aren't present in mod directory: The opposite of Error.030: You have a mods.txt entry for a mod which isn’t present as a sub-folder of either the Community or Temp directory. Either restore that folder from another place or delete the entry in question from the mods.txt file.
+* **Error.040**: Found mods which were registered but aren't present in mod directory. You have registered a mod which isn’t present as a sub-folder of either the Community or Temp directory. Either restore that folder from another place or delete the entry in question from the mods.txt file.
 * **Error.050**: Found mods with corrupted directory structure: Each mod sub-folder must contain a manifest.json file on the first level of its folder hierarchy. If this is not the case, this was typically the result of the mod being incorrectly ZIPped / unzipped, i.e. with surplus directories. Make sure the directory structure for all mods is correct. Note that some mods may actually consist of more than one MSFS mod directory! In that case, you need to register each of these directories as individual mods in mods.txt.
 * **Error.100**: General mods.txt line read error: Mod Selector cannot read an invidual line in your mods.txt file. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
 * **Error.101**: mods.txt line information read error: Mod Selector can read an invidual line in your mods.txt file, but it can’t interpret a critical piece of information. Make sure the line corresponds exactly to the format described in “Adding a mod”. If you are sure it does, this is possibly a bug. Please report it by opening an issue.
@@ -317,7 +328,9 @@ For installing new mods:
 This program is very early beta. I have created it as a very quick & dirty solution for my own personal use but eventually decided to release it publicly, even if of little use.
 Known limitations include:
 * First startup initializing may take some time.
-* No auto-discovery / assistance to add mods. All mods have to be added manually in the mods.txt file.
+* No “edit mods” UI.
+* No support for editing multiple mods at once via UI.
+* No UI support for contributing to central mods DB.
 * Mod Selector will not remember the last selection but always start up in the default selection.
 * Only limited possibilities to re-arrange geographical areas on the UI.
 * Doesn’t help identifying individual mods. Mods are simply kept in their (oftentimes chaotically named) directory structures.
@@ -325,6 +338,10 @@ Known limitations include:
 * And probably a few more improvements which would be “nice to have”…
 
 ## Version history
+* 0.9:
+  * Added “Add mods” UI, including input validation;
+  * added global UI exception feedback (prevent exception swallowing in the UI);
+  * fixed UTF-8 encoding for default labels.
 * 0.8:
   * added mods.txt to mods-db.txt (repository) export functionality, including more restrictive mod meta-information rules;
   * added optional Git integration for mods-db.txt update;
@@ -366,6 +383,8 @@ Known limitations include:
 * 0.1: Initial release
 
 ## Upgrade guide
+* 0.8 -> 0.9:
+  * (Fully backwards-compatible.)
 * 0.7 -> 0.8:
   * Make sure to add the ```Continent.UC.Countries``` and ```Continent.UC=U.S.A. / Canada``` entries to your config.properties file.
     * Note that the US states and Canada have been merged into the new Continent.UC= U.S.A. / Canada continent. In this continent, individual US states are treated as separate countries, and Canada is a country of that continent as well.

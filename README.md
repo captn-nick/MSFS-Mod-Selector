@@ -112,7 +112,7 @@ Note the following restrictions. When violated, they cause a warning / error.
 
 First, start up Mod Selector. If it finds a mod that is not registered yet, a window will pop up, listing all the newly found mods which you can then add. You must register all mods before you can continue to the main window.
 
-The **“Add mod” window** lists all mods by their folder name on the left and the properties of the currently selected mod on the right.
+The **“Add mods” window** lists all mods by their folder name on the left and the properties of the currently selected mod on the right.
 
 For all mods found in the central mod repository, properties will be pre-filled.
 

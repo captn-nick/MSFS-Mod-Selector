@@ -98,27 +98,27 @@ In that way, selecting an entire continent / country (with cities) actually mean
 
 ## Adding a mod
 In order to add a mod under Mod Selector management, you must:
-* place the mod folder in the Community or Temp directory
+* place the mod folder in the Community or Temp directory.
 * register the mod with Mod Selector. Note that Mod Selector will help you registering mods which it found in the online mod database. See below for details.
 
 ### Restrictions
 Note the following restrictions. When violated, they cause a warning / error.
 * Mod type must be one of the supported mod types.
-* Cities must be uniquely linked to a country and a continent across all mods.txt entries, i.e. a city must not be linked to one country/continent in one entry, and to another in another entry.
 * Countries must be uniquely linked to a continent across all mods.txt entries, i.e. a country must not be linked to one continent in one entry, and to another in another entry.
+* Cities must be uniquely linked to a country and a continent across all mods.txt entries, i.e. a city must not be linked to one country/continent in one entry, and to another in another entry.
 
 ### Adding a mod through the UI
 ![Adding a mod](/documentation/screenshot-add-mods.png)
 
-First, start up Mod Selector. If it finds a mod that is not registered yet, a UI will show, listing all the newly found mods which you can then add. You must register all mods before you can continue to the main window.
+First, start up Mod Selector. If it finds a mod that is not registered yet, a window will pop up, listing all the newly found mods which you can then add. You must register all mods before you can continue to the main window.
 
-The “Add mod” window lists all mods by their folder name on the left and the properties of the currently selected mod on the right.
+The **“Add mod” window** lists all mods by their folder name on the left and the properties of the currently selected mod on the right.
 
 For all mods found in the central mod repository, properties will be pre-filled.
 
 Press the “Update mod DB” button to retrieve the newest update from the online mod repository, and to update the UI with its values.
 * Note that this will reload the UI, and your previous inputs will be discarded.
-Note that Mod Selector does not directly search for information online, but rather, updates its mods DB with information from the internet and then uses it as a local source. That’s why it’s important to update your local mods DB regularly. Think of it as your virus scanner’s virus definition database.
+* Note also that Mod Selector does not directly search for information online, but rather, updates its mods DB with information from the internet and then uses it as a local source. That’s why it’s important to update your local mods DB regularly. Think of it as your virus scanner’s virus definition database.
 
 Then, go though the list of mods and update their properties accordingly. Note:
 * There is an autocomplete function for some properties.
